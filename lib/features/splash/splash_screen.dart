@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/features/Home/home_screen.dart';
+import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/onbaording/onboarding_screen.dart';
 
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return HomeScreen();
+            return MainScreen();
           },
         ),
       );
