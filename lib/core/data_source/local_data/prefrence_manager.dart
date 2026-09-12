@@ -20,7 +20,7 @@ class PrefrenceManager {
     return await _preferences.setString(key, value);
   }
 
-  remove(String key) async {
+  Future<void> remove(String key) async {
     await _preferences.remove(key);
   }
 
@@ -30,5 +30,9 @@ class PrefrenceManager {
 
   bool? getBool(String key) {
     return _preferences.getBool(key);
+  }
+
+  clear() async {
+    await _preferences.clear();
   }
 }

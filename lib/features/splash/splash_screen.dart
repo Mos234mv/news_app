@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/features/Home/home_screen.dart';
 import 'package:news_app/features/auth/login_screen.dart';
-import 'package:news_app/features/onbaording/models/onboarding_model.dart';
 import 'package:news_app/features/onbaording/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigtionAfterSplash() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 5));
     final bool Onboarding =
         PrefrenceManager().getBool("onboarding_compelete") ?? false;
     final bool islogin = PrefrenceManager().getBool("is_loged_in") ?? false;

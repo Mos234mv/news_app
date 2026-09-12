@@ -56,8 +56,8 @@ class _CustomTextFormFilledState extends State<CustomTextFormFilled> {
                       });
                     },
                     icon: isPassword
-                        ? Icon(Icons.visibility_off)
-                        : Icon(Icons.visibility),
+                        ? Icon(Icons.visibility)
+                        : Icon(Icons.visibility_off),
                   )
                 : null,
           ),
