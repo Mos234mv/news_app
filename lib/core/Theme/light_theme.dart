@@ -6,7 +6,7 @@ ThemeData light = ThemeData(
   textTheme: TextTheme(
     displayMedium: TextStyle(color: Color(0xFF4E4B66), fontSize: 20, fontWeight: FontWeight.w700),
     displaySmall: TextStyle(color: Color(0xFF6E7191), fontSize: 16, fontWeight: FontWeight.w400),
-    titleSmall: TextStyle(color: LightColor.primaryColor, fontSize: 14, fontWeight: FontWeight.w400),
+    titleSmall: TextStyle(color: const Color.fromRGBO(197, 48, 48, 1), fontSize: 14, fontWeight: FontWeight.w400),
     titleMedium: TextStyle(color: Color(0xFF363636), fontSize: 20, fontWeight: FontWeight.w700),
     titleLarge: TextStyle(color: Color(0xFF141414), fontSize: 16, fontWeight: FontWeight.w400),
     displayLarge: TextStyle(color: Color(0xFF363636), fontSize: 16, fontWeight: FontWeight.w400),

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
+import 'package:news_app/core/extentions/date_time_extention.dart';
+import 'package:news_app/core/widgets/custom_cached_network_image.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
 import 'package:news_app/features/Home/models/home_provider.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +61,12 @@ class TrendingNews extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8),
                                     child: Stack(
                                       children: [
-                                        if (model.urlToImage != null) Image.network(model.urlToImage!),
+                                        if (model.urlToImage != null)
+                                          CustomCachedNetworkImage(
+                                            path: model.urlToImage ?? '',
+                                            width: 240,
+                                            height: 140,
+                                          ),
 
                                         Positioned.fill(
                                           child: Container(
@@ -103,7 +110,7 @@ class TrendingNews extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Text(formatDateTime(model.publishedAt)),
+                                                  Text(model.publishedAt.formatDateTime()),
                                                 ],
                                               ),
                                             ],
