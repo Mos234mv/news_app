@@ -17,7 +17,7 @@ class ViewAllComoponent extends StatelessWidget {
             style: TextStyle(color: titleColor ?? Color(0xFFFFFCFC), fontSize: 16, fontWeight: FontWeight.w700),
           ), //Theme.of(context).textTheme.bodyMedium
           InkWell(
-            onTap: () => onTap,
+            onTap: () => onTap(),
             child: Text(
               'View all',
               style: TextStyle(

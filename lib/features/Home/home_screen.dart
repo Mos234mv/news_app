@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/features/Home/components/categories.dart';
+import 'package:news_app/features/Home/components/categories_list.dart';
 import 'package:news_app/features/Home/components/top_headline.dart';
 import 'package:news_app/features/Home/components/trending_news.dart';
 
@@ -12,11 +12,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<HomeProvider>(
-      create: (BuildContext _) => HomeProvider(),
+    return ChangeNotifierProvider(
+      create: (BuildContext context) {
+        return HomeProvider();
+      },
       child: Consumer<HomeProvider>(
         builder: (BuildContext context, HomeProvider controller, Widget? child) {
-          return Scaffold(body: CustomScrollView(slivers: [TrendingNews(), Categories(), TopHeadline()]));
+          return Scaffold(body: CustomScrollView(slivers: [TrendingNews(), CategoriesList(), TopHeadline()]));
         },
       ),
     );

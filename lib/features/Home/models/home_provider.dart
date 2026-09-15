@@ -14,8 +14,8 @@ class HomeProvider with ChangeNotifier {
 
   RequestStytasEnum everyThingStutas = RequestStytasEnum.loding;
 
-  RequestStytasEnum TopHeadLineStutas = RequestStytasEnum.loding;
-
+  RequestStytasEnum topheadlinestutas = RequestStytasEnum.loding;
+  RequestStytasEnum categoriesstutas = RequestStytasEnum.loding;
   List<NewsArticleModel> newsTopHeadLine = [];
   List<NewsArticleModel> newsEveryThing = [];
   ApiService apiService = ApiService();
@@ -24,7 +24,8 @@ class HomeProvider with ChangeNotifier {
 
   void getTopHeadLine({String? category}) async {
     try {
-      TopHeadLineStutas = RequestStytasEnum.loding;
+      topheadlinestutas = RequestStytasEnum.loding;
+      categoriesstutas = RequestStytasEnum.loding;
 
       notifyListeners();
       Map<String, dynamic> result = await apiService.get(
@@ -34,10 +35,12 @@ class HomeProvider with ChangeNotifier {
 
       newsTopHeadLine = (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
 
-      TopHeadLineStutas = RequestStytasEnum.loded;
+      topheadlinestutas = RequestStytasEnum.loded;
+      categoriesstutas = RequestStytasEnum.loded;
       errorMessage = null;
     } catch (e) {
-      TopHeadLineStutas = RequestStytasEnum.error;
+      topheadlinestutas = RequestStytasEnum.error;
+      categoriesstutas = RequestStytasEnum.error;
       errorMessage = e.toString();
     }
     notifyListeners();

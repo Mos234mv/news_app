@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/Theme/light_color.dart';
+import 'package:news_app/features/Home/categories_Screen.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
 import 'package:news_app/features/Home/models/home_provider.dart';
 import 'package:provider/provider.dart';
 
-class Categories extends StatelessWidget {
-  Categories({super.key});
-  final List<String> categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technol'];
+class CategoriesList extends StatelessWidget {
+  CategoriesList({super.key});
+  final List<String> categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
@@ -14,12 +15,25 @@ class Categories extends StatelessWidget {
         return SliverToBoxAdapter(
           child: Column(
             children: [
-              ViewAllComoponent(title: 'Categories', titleColor: Color(0xFF141414), onTap: () {}),
+              ViewAllComoponent(
+                title: 'Categories',
+                titleColor: Color(0xFF141414),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return ChangeNotifierProvider.value(value: controller, child: CategoriesScreen());
+                      },
+                    ),
+                  );
+                },
+              ),
 
               Padding(
                 padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                 child: SizedBox(
-                  height: 30,
+                  height: 35,
                   child: ListView.separated(
                     padding: EdgeInsets.only(right: 20),
                     scrollDirection: Axis.horizontal,
@@ -35,7 +49,11 @@ class Categories extends StatelessWidget {
                             children: [
                               Text(
                                 categories[index][0].toUpperCase() + categories[index].substring(1),
-                                style: Theme.of(context).textTheme.displayLarge,
+                                style: TextStyle(
+                                  color: isSelected ? LightColor.primaryColor : Color(0xFF363636),
+                                  fontSize: 16,
+                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                ),
                               ),
                               if (isSelected) ...[
                                 SizedBox(height: 6),

@@ -67,4 +67,7 @@ ThemeData light = ThemeData(
     ),
   ),
   progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.red),
+  appBarTheme: AppBarThemeData(
+    titleTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF141414)),
+  ),
 );
