@@ -17,8 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? errorMessage;
@@ -30,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isLoading = true;
     });
     await Future.delayed(Duration(seconds: 3));
+    if (!mounted) return;
     final savedEmail = PrefrenceManager().getString('user_email');
     if (savedEmail != null && savedEmail == emailController.text.trim()) {
       setState(() {
@@ -38,20 +38,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
     } else {
       await PrefrenceManager().setString('user_email', emailController.text);
-      await PrefrenceManager().setString(
-        'user_password',
-        passwordController.text,
-      );
+      await PrefrenceManager().setString('user_password', passwordController.text);
       await PrefrenceManager().setBool("is_loged_in", true);
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return MainScreen();
+            return LoginScreen();
           },
         ),
       );
@@ -64,11 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bkg_image.png'),
-          ),
-        ),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/bkg_image.png'))),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
@@ -89,9 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return "Please Enter Email";
                     }
 
-                    RegExp emailRegExp = RegExp(
-                      r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                    );
+                    RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
                     if (!emailRegExp.hasMatch(value)) {
                       return 'Please Enter Valid Email';
@@ -151,8 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   title: 'Confirm Passward',
                   obscureText: true,
                 ),
-                if (errorMessage != null)
-                  Text(errorMessage!, style: TextStyle(color: Colors.red)),
+                if (errorMessage != null) Text(errorMessage!, style: TextStyle(color: Colors.red)),
                 SizedBox(height: 20),
                 SizedBox(
                   height: 48,
@@ -161,27 +152,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () {
                       if (formKey.currentState?.validate() ?? false) {
                         register();
-                        Navigator.pop(context);
                       }
                     },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text('Sign Up'),
+                    child: isLoading ? CircularProgressIndicator() : Text('Sign Up'),
                   ),
                 ),
                 SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Have an account ?',
-                      style: Theme.of(context).textTheme.titleLarge!
-                          .copyWith(fontSize: 14),
-                    ),
+                    Text('Have an account ?', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 14)),
                     SizedBox(width: 8),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {

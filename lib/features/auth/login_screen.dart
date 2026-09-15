@@ -37,8 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (savedEmail != emailController.text ||
-        savedPassword != passwordController.text) {
+    if (savedEmail != emailController.text || savedPassword != passwordController.text) {
       setState(() {
         errorMessage = 'Incorrect Email or Password';
         isLoading = false;
@@ -68,11 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bkg_image.png'),
-          ),
-        ),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/bkg_image.png'))),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
@@ -92,9 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return "Please Enter Email";
                     }
 
-                    RegExp emailRegExp = RegExp(
-                      r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                    );
+                    RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
                     if (!emailRegExp.hasMatch(value)) {
                       return 'Please Enter Valid Email';
@@ -117,8 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Password",
                   obscureText: true,
                 ),
-                if (errorMessage != null)
-                  Text(errorMessage!, style: TextStyle(color: Colors.red)),
+                if (errorMessage != null) Text(errorMessage!, style: TextStyle(color: Colors.red)),
                 SizedBox(height: 20),
                 SizedBox(
                   height: 48,
@@ -129,9 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         logIn();
                       }
                     },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text('Sign In'),
+                    child: isLoading ? CircularProgressIndicator() : Text('Sign In'),
                   ),
                 ),
                 SizedBox(height: 24),
@@ -140,13 +130,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       'Don’t have an account ?',
-                      style: Theme.of(context).textTheme.titleLarge!
-                          .copyWith(fontSize: 14),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 14),
                     ),
                     SizedBox(width: 8),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {

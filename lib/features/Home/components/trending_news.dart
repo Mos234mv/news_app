@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
 import 'package:news_app/core/extentions/date_time_extention.dart';
 import 'package:news_app/core/widgets/custom_cached_network_image.dart';
+import 'package:news_app/features/Home/components/trending_news_shimmer.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
 import 'package:news_app/features/Home/models/home_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TrendingNews extends StatelessWidget {
   const TrendingNews({super.key});
@@ -39,8 +41,7 @@ class TrendingNews extends StatelessWidget {
                       builder: (BuildContext context, HomeProvider controller, Widget? child) {
                         switch (controller.everyThingStutas) {
                           case RequestStytasEnum.loding:
-                            return Center(child: CircularProgressIndicator());
-
+                            return TrendingNewsShimmer();
                           case RequestStytasEnum.error:
                             return Center(
                               child: Text(controller.errorMessage!, style: Theme.of(context).textTheme.titleSmall),
