@@ -3,10 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/data_source/remote_data/api_service.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
+import 'package:news_app/core/mixin/safe_notifier_mixin.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
 import 'package:news_app/features/Home/repos/news_repos.dart';
 
-class HomeProvider with ChangeNotifier {
+class HomeProvider extends ChangeNotifier with SafeNotify {
   HomeProvider(this.newsRepos) {
     getTopHeadLine();
     getEveryThing();
@@ -28,7 +29,7 @@ class HomeProvider with ChangeNotifier {
       topheadlinestutas = RequestStytasEnum.loding;
       categoriesstutas = RequestStytasEnum.loding;
 
-      notifyListeners();
+      safeNotify();
       newsTopHeadLine = await newsRepos.getTopHeadLine(selectedCategory: selectedCategory);
       topheadlinestutas = RequestStytasEnum.loded;
       categoriesstutas = RequestStytasEnum.loded;
@@ -38,7 +39,7 @@ class HomeProvider with ChangeNotifier {
       categoriesstutas = RequestStytasEnum.error;
       errorMessage = e.toString();
     }
-    notifyListeners();
+    safeNotify();
   }
 
   void getEveryThing() async {
@@ -51,12 +52,12 @@ class HomeProvider with ChangeNotifier {
       errorMessage = e.toString();
       everyThingStutas = RequestStytasEnum.error;
     }
-    notifyListeners();
+    safeNotify();
   }
 
   void updatSelectedCategory(String category) {
     selectedCategory = category;
     getTopHeadLine(category: selectedCategory);
-    notifyListeners();
+    safeNotify();
   }
 }

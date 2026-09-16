@@ -47,12 +47,14 @@ class CategoriesScreen extends StatelessWidget {
                             child: IntrinsicWidth(
                               child: Column(
                                 children: [
-                                  Text(
-                                    categories[index][0].toUpperCase() + categories[index].substring(1),
-                                    style: TextStyle(
-                                      color: isSelected ? LightColor.primaryColor : Color(0xFF363636),
-                                      fontSize: AppSizes.sp16,
-                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                  Expanded(
+                                    child: Text(
+                                      categories[index][0].toUpperCase() + categories[index].substring(1),
+                                      style: TextStyle(
+                                        color: isSelected ? LightColor.primaryColor : Color(0xFF363636),
+                                        fontSize: AppSizes.sp16,
+                                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                   if (isSelected) ...[

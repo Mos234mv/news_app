@@ -17,10 +17,7 @@ class OnboardingProvider with ChangeNotifier {
   }
 
   void nextPage() {
-    pageController.nextPage(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     notifyListeners();
   }
 
