@@ -6,7 +6,7 @@ import 'package:news_app/features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ScreenUtil.ensureScreenSize();
+  await ScreenUtil.ensureScreenSize(); // هنا يتم استخدامها بشكل صحيح
   await PrefrenceManager().init();
 
   runApp(const MyApp());
@@ -15,18 +15,20 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(375, 832),
+      designSize: const Size(375, 832),
       minTextAdapt: true,
+      splitScreenMode: true,
+
+      // تم حذف ensureSize من هنا لأنها غير موجودة كمتغير داخل ScreenUtilInit
       builder: (cxt, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: light,
-          home: SplashScreen(),
+          home: const SplashScreen(),
         );
       },
     );

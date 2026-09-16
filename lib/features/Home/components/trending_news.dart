@@ -65,7 +65,7 @@ class TrendingNews extends StatelessWidget {
                                 return Container(
                                   width: AppSizes.w240,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(AppSizes.r8),
+                                    borderRadius: BorderRadius.circular(AppSizes.r12),
                                     child: Stack(
                                       children: [
                                         if (model.urlToImage != null)

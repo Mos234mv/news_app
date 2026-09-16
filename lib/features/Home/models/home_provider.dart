@@ -1,13 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:news_app/core/data_source/remote_data/api.config.dart';
 import 'package:news_app/core/data_source/remote_data/api_service.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
+import 'package:news_app/features/Home/repos/news_repos.dart';
 
 class HomeProvider with ChangeNotifier {
-  HomeProvider() {
+  HomeProvider(this.newsRepos) {
     getTopHeadLine();
     getEveryThing();
   }
@@ -21,6 +21,7 @@ class HomeProvider with ChangeNotifier {
   ApiService apiService = ApiService();
   String? errorMessage;
   String? selectedCategory;
+  final NewsRepos newsRepos;
 
   void getTopHeadLine({String? category}) async {
     try {
@@ -28,13 +29,7 @@ class HomeProvider with ChangeNotifier {
       categoriesstutas = RequestStytasEnum.loding;
 
       notifyListeners();
-      Map<String, dynamic> result = await apiService.get(
-        ApiConfig.topHeadlines,
-        params: {"country": "us", "category": selectedCategory},
-      );
-
-      newsTopHeadLine = (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
-
+      newsTopHeadLine = await newsRepos.getTopHeadLine(selectedCategory: selectedCategory);
       topheadlinestutas = RequestStytasEnum.loded;
       categoriesstutas = RequestStytasEnum.loded;
       errorMessage = null;
@@ -48,10 +43,7 @@ class HomeProvider with ChangeNotifier {
 
   void getEveryThing() async {
     try {
-      Map<String, dynamic> result = await apiService.get(ApiConfig.everyThing, params: {"q": "news"});
-
-      newsEveryThing = (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
-
+      newsEveryThing = await newsRepos.getEveryThing();
       everyThingStutas = RequestStytasEnum.loded;
       errorMessage = null;
     } catch (e) {

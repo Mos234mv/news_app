@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/constant/app_sizes.dart';
+
 import 'package:news_app/features/onbaording/controllers/controller.dart';
 import 'package:news_app/features/onbaording/models/onboarding_model.dart';
 
@@ -18,26 +20,16 @@ class OnboardingScreen extends StatelessWidget {
             backgroundColor: Color(0xFFF5F5F5),
             actions: [
               Consumer<OnboardingProvider>(
-                builder:
-                    (
-                      BuildContext context,
-                      OnboardingProvider value,
-                      Widget? child,
-                    ) {
-                      return value.isLastPage
-                          ? SizedBox()
-                          : TextButton(
-                              onPressed: () {
-                                OnboardingProvider().onFinishOnboarding(
-                                  context,
-                                );
-                              },
-                              child: Text(
-                                'skip',
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                            );
-                    },
+                builder: (BuildContext context, OnboardingProvider value, Widget? child) {
+                  return value.isLastPage
+                      ? SizedBox()
+                      : TextButton(
+                          onPressed: () {
+                            OnboardingProvider().onFinishOnboarding(context);
+                          },
+                          child: Text('skip', style: Theme.of(context).textTheme.titleSmall),
+                        );
+                },
               ),
             ],
           ),
@@ -46,35 +38,25 @@ class OnboardingScreen extends StatelessWidget {
             child: PageView.builder(
               controller: controller.pageController,
               onPageChanged: (index) {
-                Provider.of<OnboardingProvider>(
-                  context,
-                  listen: false,
-                ).onPageChanged(index);
+                Provider.of<OnboardingProvider>(context, listen: false).onPageChanged(index);
               },
               itemCount: OnboardingModel.onboardingList.length,
               itemBuilder: (BuildContext context, int index) {
-                final OnboardingModel model =
-                    OnboardingModel.onboardingList[index];
+                final OnboardingModel model = OnboardingModel.onboardingList[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 16,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.ph30, horizontal: AppSizes.pw16),
                   child: Column(
                     children: [
-                      Image.asset(model.path, width: 325),
-                      SizedBox(height: 24),
-                      Text(
-                        model.title,
-                        style: Theme.of(context).textTheme.displayMedium,
-                      ),
-                      SizedBox(height: 12),
+                      Image.asset(model.path, width: AppSizes.w325),
+                      SizedBox(height: AppSizes.ph24),
+                      Text(model.title, style: Theme.of(context).textTheme.displayMedium),
+                      SizedBox(height: AppSizes.ph12),
                       Text(
                         model.description,
                         style: Theme.of(context).textTheme.displaySmall,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 24),
+                      SizedBox(height: AppSizes.ph24),
                       SmoothPageIndicator(
                         controller: controller.pageController, // PageController
                         count: OnboardingModel.onboardingList.length,
@@ -92,24 +74,17 @@ class OnboardingScreen extends StatelessWidget {
                         builder: (BuildContext context, value, Widget? child) {
                           return ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              fixedSize: Size(
-                                MediaQuery.of(context).size.width,
-                                48,
-                              ),
+                              fixedSize: Size(MediaQuery.of(context).size.width, AppSizes.h48),
                             ),
                             onPressed: () {
                               if (!value.isLastPage) {
                                 controller.nextPage();
                               } else {
-                                OnboardingProvider().onFinishOnboarding(
-                                  context,
-                                );
+                                OnboardingProvider().onFinishOnboarding(context);
                               }
                             },
 
-                            child: Text(
-                              value.isLastPage ? 'Get Started' : 'Next',
-                            ),
+                            child: Text(value.isLastPage ? 'Get Started' : 'Next'),
                           );
                         },
                       ),
