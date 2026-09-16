@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
 import 'package:news_app/features/auth/login_screen.dart';
+
+import '../../core/constant/app_sizes.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -64,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         height: double.infinity,
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/bkg_image.png'))),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.pw16),
           child: Form(
             key: formKey,
             child: Column(
@@ -73,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Center(child: Image.asset('assets/images/logo_news.png')),
 
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.ph24),
                 CustomTextFormFilled(
                   controller: emailController,
                   hintText: 'mostafaamed.net@gmail.com',
@@ -100,19 +103,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value == null || value.isEmpty) {
                       return "Please Enter Password";
                     }
-
-                    // Defines the regex for:
-                    // 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character, Minimum 8 Characters
-                    // final passwordRegEx = RegExp(
-                    //   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
-                    // );
-
-                    // // ADDED '!': If the value DOES NOT match the regex, return the error.
-                    // if (!passwordRegEx.hasMatch(value)) {
-                    //   return "Please Enter Valid Password";
-                    // }
-
-                    // Return null if all checks pass (meaning the password is valid)
                     return null;
                   },
                   title: "Password",
@@ -125,28 +115,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value == null || value.isEmpty) {
                       return "Please Enter Password";
                     }
-
-                    // Defines the regex for:
-                    // 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character, Minimum 8 Characters
-                    // final passwordRegEx = RegExp(
-                    //   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
-                    // );
-
-                    // // ADDED '!': If the value DOES NOT match the regex, return the error.
-                    // if (!passwordRegEx.hasMatch(value)) {
-                    //   return "Please Enter Valid Password";
-                    // }
-
-                    // Return null if all checks pass (meaning the password is valid)
                     return null;
                   },
                   title: 'Confirm Passward',
                   obscureText: true,
                 ),
                 if (errorMessage != null) Text(errorMessage!, style: TextStyle(color: Colors.red)),
-                SizedBox(height: 20),
+                SizedBox(height: AppSizes.ph20),
                 SizedBox(
-                  height: 48,
+                  height: AppSizes.h48,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -157,12 +134,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: isLoading ? CircularProgressIndicator() : Text('Sign Up'),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.ph24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Have an account ?', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 14)),
-                    SizedBox(width: 8),
+                    Text('Have an account ?', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: AppSizes.sp14)),
+                    SizedBox(width: AppSizes.pw8),
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(

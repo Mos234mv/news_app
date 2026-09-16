@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/constant/app_sizes.dart';
 
 class CustomTextFormFilled extends StatefulWidget {
   CustomTextFormFilled({
@@ -38,9 +39,9 @@ class _CustomTextFormFilledState extends State<CustomTextFormFilled> {
           style: Theme.of(context).textTheme.titleMedium,
         ),
 
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.ph16),
         Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
-        SizedBox(height: 8),
+        SizedBox(height:AppSizes.ph8),
         TextFormField(
           controller: widget.controller,
           maxLines: widget.maxlines,
@@ -63,7 +64,7 @@ class _CustomTextFormFilledState extends State<CustomTextFormFilled> {
           ),
           obscureText: widget.obscureText && !isPassword,
         ),
-        SizedBox(height: 12),
+        SizedBox(height: AppSizes.ph12),
       ],
     );
   }

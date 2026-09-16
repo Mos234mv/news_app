@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
 import 'package:news_app/features/auth/register_screen.dart';
+
+import '../../core/constant/app_sizes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -69,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         height: double.infinity,
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/bkg_image.png'))),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.pw16),
           child: Form(
             key: form,
             child: Column(
@@ -77,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Center(child: Image.asset('assets/images/logo_news.png')),
 
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.ph24),
                 CustomTextFormFilled(
                   controller: emailController,
                   hintText: 'mostafaamed.net@gmail.com',
@@ -111,9 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                 ),
                 if (errorMessage != null) Text(errorMessage!, style: TextStyle(color: Colors.red)),
-                SizedBox(height: 20),
+                SizedBox(height: AppSizes.ph20),
                 SizedBox(
-                  height: 48,
+                  height: AppSizes.h48,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -124,15 +127,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: isLoading ? CircularProgressIndicator() : Text('Sign In'),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.ph24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Don’t have an account ?',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 14),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: AppSizes.sp14),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: AppSizes.pw8),
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
