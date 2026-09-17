@@ -4,7 +4,7 @@ import 'package:news_app/features/Home/models/news_article_model.dart';
 
 abstract class BaseNewRepo {
   Future<List<NewsArticleModel>> getTopHeadLine({String? selectedCategory = 'general'});
-  Future<List<NewsArticleModel>> getEveryThing();
+  Future<List<NewsArticleModel>> getEveryThing({String? query = "news"});
 }
 
 class NewsRepos extends BaseNewRepo {
@@ -23,8 +23,8 @@ class NewsRepos extends BaseNewRepo {
   }
 
   // ignore: annotate_overrides
-  Future<List<NewsArticleModel>> getEveryThing() async {
-    Map<String, dynamic> result = await apiService.get(ApiConfig.everyThing, params: {"q": "news"});
+  Future<List<NewsArticleModel>> getEveryThing({String? query = "news"}) async {
+    Map<String, dynamic> result = await apiService.get(ApiConfig.everyThing, params: {"q": query});
 
     return (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
   }

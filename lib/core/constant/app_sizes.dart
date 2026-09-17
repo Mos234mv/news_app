@@ -26,6 +26,7 @@ class AppSizes {
   static final double h40 = 40.h;
   static final double h42 = 42.h;
   static final double h44 = 44.h;
+  static final double h45 = 45.h;
   static final double h46 = 46.h;
   static final double h48 = 48.h;
   static final double h50 = 50.h;
@@ -61,6 +62,7 @@ class AppSizes {
   static final double w40 = 40.w;
   static final double w42 = 42.w;
   static final double w44 = 44.w;
+  static final double w45 = 45.w;
   static final double w46 = 46.w;
   static final double w48 = 48.w;
   static final double w50 = 50.w;
@@ -70,7 +72,7 @@ class AppSizes {
   static final double w215 = 215.w;
   static final double w325 = 325.w;
   static final double w240 = 240.w;
-  static final double  w0_5 = 0.5 ;
+  static final double w0_5 = 0.5.w;
 
   //text fontsize
   static final double sp2 = 2.sp;
@@ -95,7 +97,7 @@ class AppSizes {
   static final double sp40 = 40.sp;
   static final double sp42 = 42.sp;
   static final double sp44 = 44.sp;
-  static final double  sp45 = 45.sp;
+  static final double sp45 = 45.sp;
   static final double sp46 = 46.sp;
   static final double sp48 = 48.sp;
   static final double sp50 = 50.sp;

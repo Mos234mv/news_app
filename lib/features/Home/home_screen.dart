@@ -5,7 +5,7 @@ import 'package:news_app/features/Home/components/top_headline.dart';
 import 'package:news_app/features/Home/components/trending_news.dart';
 
 import 'package:news_app/features/Home/models/home_provider.dart';
-import 'package:news_app/features/Home/repos/news_repos.dart';
+import 'package:news_app/core/repos/news_repos.dart';
 
 import 'package:provider/provider.dart';
 

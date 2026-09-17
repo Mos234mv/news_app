@@ -5,7 +5,7 @@ import 'package:news_app/core/data_source/remote_data/api_service.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
 import 'package:news_app/core/mixin/safe_notifier_mixin.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
-import 'package:news_app/features/Home/repos/news_repos.dart';
+import 'package:news_app/core/repos/news_repos.dart';
 
 class HomeProvider extends ChangeNotifier with SafeNotify {
   HomeProvider(this.newsRepos) {

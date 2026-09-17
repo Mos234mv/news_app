@@ -42,6 +42,8 @@ dependencies:
   cached_network_image: ^4.0.0
   shimmer: ^4.0.0
   flutter_screenutil: ^5.9.3
+  image_picker: ^1.2.3
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:
