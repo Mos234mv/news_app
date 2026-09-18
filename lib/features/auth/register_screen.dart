@@ -17,7 +17,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
-
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -41,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
     } else {
       await PrefrenceManager().setString('user_email', emailController.text);
+      await PrefrenceManager().setString('username', usernameController.text);
       await PrefrenceManager().setString('user_password', passwordController.text);
       await PrefrenceManager().setBool("is_loged_in", true);
       if (!mounted) return;
@@ -65,97 +66,128 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/bkg_image.png'))),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/bkg_image.png')),
+        ),
         child: Padding(
           padding: EdgeInsets.all(AppSizes.pw16),
           child: Form(
             key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(child: Image.asset('assets/images/logo_news.png')),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(child: Image.asset('assets/images/logo_news.png')),
 
-                SizedBox(height: AppSizes.ph24),
-                CustomTextFormFilled(
-                  controller: emailController,
-                  hintText: 'mostafaamed.net@gmail.com',
-                  title: 'Email',
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter Email";
-                    }
+                  Text(
+                    'Welcome to Newts',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
 
-                    RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-
-                    if (!emailRegExp.hasMatch(value)) {
-                      return 'Please Enter Valid Email';
-                    } else {
+                  SizedBox(height: AppSizes.ph16),
+                  CustomTextFormFilled(
+                    controller: usernameController,
+                    hintText: 'Mostafa Ahmed',
+                    title: 'Username',
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Your Username";
+                      }
                       return null;
-                    }
-                  },
-                  obscureText: false,
-                ),
-                CustomTextFormFilled(
-                  controller: passwordController,
-                  hintText: "***********",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter Password";
-                    }
-                    return null;
-                  },
-                  title: "Password",
-                  obscureText: true,
-                ),
-                CustomTextFormFilled(
-                  controller: confirmPasswordController,
-                  hintText: "***********",
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please Enter Password";
-                    }
-                    return null;
-                  },
-                  title: 'Confirm Passward',
-                  obscureText: true,
-                ),
-                if (errorMessage != null) Text(errorMessage!, style: TextStyle(color: Colors.red)),
-                SizedBox(height: AppSizes.ph20),
-                SizedBox(
-                  height: AppSizes.h48,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState?.validate() ?? false) {
-                        register();
+                    },
+                    obscureText: false,
+                  ),
+
+                  CustomTextFormFilled(
+                    controller: emailController,
+                    hintText: 'mostafaamed.net@gmail.com',
+                    title: 'Email',
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Email";
+                      }
+
+                      RegExp emailRegExp = RegExp(
+                        r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                      );
+
+                      if (!emailRegExp.hasMatch(value)) {
+                        return 'Please Enter Valid Email';
+                      } else {
+                        return null;
                       }
                     },
-                    child: isLoading ? CircularProgressIndicator() : Text('Sign Up'),
+                    obscureText: false,
                   ),
-                ),
-                SizedBox(height: AppSizes.ph24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Have an account ?', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: AppSizes.sp14)),
-                    SizedBox(width: AppSizes.pw8),
-                    TextButton(
+
+                  CustomTextFormFilled(
+                    controller: passwordController,
+                    hintText: "***********",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Password";
+                      }
+                      return null;
+                    },
+                    title: "Password",
+                    obscureText: true,
+                  ),
+                  CustomTextFormFilled(
+                    controller: confirmPasswordController,
+                    hintText: "***********",
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Password";
+                      }
+                      return null;
+                    },
+                    title: 'Confirm Passward',
+                    obscureText: true,
+                  ),
+                  if (errorMessage != null)
+                    Text(errorMessage!, style: TextStyle(color: Colors.red)),
+                  SizedBox(height: AppSizes.ph20),
+                  SizedBox(
+                    height: AppSizes.h48,
+                    width: double.infinity,
+                    child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return LoginScreen();
-                            },
-                          ),
-                        );
+                        if (formKey.currentState?.validate() ?? false) {
+                          register();
+                        }
                       },
-                      child: Text("Sign In"),
+                      child: isLoading ? CircularProgressIndicator() : Text('Sign Up'),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: AppSizes.ph24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Have an account ?',
+                        style: Theme.of(context).textTheme.titleLarge!
+                            .copyWith(fontSize: AppSizes.sp14),
+                      ),
+                      SizedBox(width: AppSizes.pw8),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return LoginScreen();
+                              },
+                            ),
+                          );
+                        },
+                        child: Text("Sign In"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

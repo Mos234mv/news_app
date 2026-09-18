@@ -7,6 +7,7 @@ import 'package:news_app/core/widgets/custom_cached_network_image.dart';
 import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/Home/models/home_provider.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
+import 'package:news_app/features/deatails/news_details.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constant/app_sizes.dart';
@@ -18,75 +19,74 @@ class NewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (BuildContext context, value, Widget? child) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.pw16,
-            vertical: AppSizes.ph8,
-          ),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppSizes.r8),
-                child: CustomCachedNetworkImage(path: model.urlToImage ?? ''),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return NewsDetails(model: model);
+                },
               ),
-              SizedBox(width: AppSizes.pw8),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model.title,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      maxLines: 2,
-                    ),
-                    Row(
-                      children: [
-                        if (model.urlToImage != null)
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(model.urlToImage!),
-                            radius: AppSizes.r10,
-                          ),
-                        SizedBox(width: AppSizes.pw6),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Text(
-                                    () {
-                                  final author =
-                                      model.author ?? "There Is No Thing";
-                                  return author.substring(
-                                    0,
-                                    min(author.length, 10),
-                                  );
-                                }(),
-                                style: Theme.of(context).textTheme.titleLarge,
-                                maxLines: 1,
-                              ),
-                              SizedBox(width: AppSizes.pw8),
-                              Expanded(
-                                child: Text(
-                                  model.publishedAt.formatDateTime(),
-                                  style: TextStyle(
-                                    color: Color(0xFF141414),
-                                    fontSize: AppSizes.sp16,
-                                    fontWeight: FontWeight.w400,
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.pw16, vertical: AppSizes.ph8),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.r8),
+                  child: CustomCachedNetworkImage(path: model.urlToImage ?? ''),
+                ),
+                SizedBox(width: AppSizes.pw8),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(model.title, style: Theme.of(context).textTheme.titleLarge, maxLines: 2),
+                      Row(
+                        children: [
+                          if (model.urlToImage != null)
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(model.urlToImage!),
+                              radius: AppSizes.r10,
+                            ),
+                          SizedBox(width: AppSizes.pw6),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text(
+                                  () {
+                                    final author = model.author ?? "There Is No Thing";
+                                    return author.substring(0, min(author.length, 10));
+                                  }(),
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  maxLines: 1,
+                                ),
+                                SizedBox(width: AppSizes.pw8),
+                                Expanded(
+                                  child: Text(
+                                    model.publishedAt.formatDateTime(),
+                                    style: TextStyle(
+                                      color: Color(0xFF141414),
+                                      fontSize: AppSizes.sp16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
-                              ),
 
-                              CustomSvgPicture(
-                                path: 'assets/images/book_mark.svg',
-                              ),
-                            ],
+                                CustomSvgPicture(path: 'assets/images/book_mark.svg'),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

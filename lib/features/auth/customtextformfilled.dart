@@ -33,15 +33,8 @@ class _CustomTextFormFilledState extends State<CustomTextFormFilled> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Welcome to Newts',
-          textAlign: TextAlign.left,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-
-        SizedBox(height: AppSizes.ph16),
         Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
-        SizedBox(height:AppSizes.ph8),
+        SizedBox(height: AppSizes.ph8),
         TextFormField(
           controller: widget.controller,
           maxLines: widget.maxlines,
@@ -56,9 +49,7 @@ class _CustomTextFormFilledState extends State<CustomTextFormFilled> {
                         isPassword = !isPassword;
                       });
                     },
-                    icon: isPassword
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                    icon: isPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
                   )
                 : null,
           ),

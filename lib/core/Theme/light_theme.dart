@@ -54,11 +54,11 @@ ThemeData light = ThemeData(
       decoration: TextDecoration.underline,
       decorationColor: Color(0xFFFFFCFC),
     ),
-    // headlineSmall: TextStyle(
-    //   color: Color(0xFF161F1B),
-    //   fontSize: AppSizes.sp16,
-    //   fontWeight: FontWeight.w400,
-    // ),
+    headlineSmall: TextStyle(
+      color: Color(0xFF161F1B),
+      fontSize: AppSizes.sp16,
+      fontWeight: FontWeight.w400,
+    ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
