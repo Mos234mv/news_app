@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize(); // هنا يتم استخدامها بشكل صحيح
   await PrefrenceManager().init();
-  UserRepository().init();
+  await UserRepository().init();
 
   runApp(const MyApp());
 }
