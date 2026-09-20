@@ -3,6 +3,7 @@
 import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:news_app/core/constant/constants.dart';
+import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/models/user_model.dart';
 
 class UserRepository {
@@ -17,7 +18,7 @@ class UserRepository {
     return _userBox!;
   }
 
-  init() async {
+  Future<void> init() async {
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(UserModelAdapter());
@@ -26,13 +27,25 @@ class UserRepository {
     _userBox = await Hive.openBox(Constants.userBox);
   }
 
-  saveUser(UserModel user) async {
+  Future<void> saveUser(UserModel user) async {
     await userBox.put(Constants.currentUser, user);
   }
 
-  getUser() => userBox.get(Constants.currentUser);
+  UserModel? getUser() => userBox.get(Constants.currentUser);
 
-  updateUser({
+  bool isLoggedIn() {
+    return PrefrenceManager().getBool("is_loged_in") ?? false;
+  }
+
+  Future<void> setLoggedIn(bool value) async {
+    await PrefrenceManager().setBool("is_loged_in", value);
+  }
+
+  Future<void> logout() async {
+    await setLoggedIn(false);
+  }
+
+  Future<void> updateUser({
     String? name,
     String? email,
     String? password,
@@ -54,15 +67,17 @@ class UserRepository {
     }
   }
 
-  delete() async {
+  Future<void> delete() async {
     await userBox.delete(Constants.currentUser);
+    await logout();
   }
 
-  clearAll() async {
+  Future<void> clearAll() async {
     await userBox.clear();
+    await logout();
   }
 
-  String? login(String email, String password) {
+  Future<String?> login(String email, String password) async {
     final user = getUser();
 
     if (user == null) {
@@ -72,6 +87,8 @@ class UserRepository {
     if (user.email != email || user.password != password) {
       return "Incorrect Email or Password";
     }
+
+    await setLoggedIn(true);
     return null;
   }
 

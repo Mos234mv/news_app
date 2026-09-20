@@ -100,8 +100,8 @@ void main() async {
 
 ### 3. Authentication (`features/auth`)
 - **Register**: Creates a new `UserModel` and persists it securely in Hive via `UserRepository().signUp(...)`.
-- **Login**: Validates credentials against stored `UserModel` via `UserRepository().login(...)`.
-- Maintains active login session flag via `PrefrenceManager`.
+- **Login**: Validates credentials against stored `UserModel` and starts session via `UserRepository().login(...)`.
+- **Session**: State managed through `UserRepository().isLoggedIn()`, `setLoggedIn()`, and `logout()`.
 
 ### 4. Home & Feed (`features/Home`)
 - **Top Headlines Carousel**: Displays breaking news with custom image caching.
@@ -118,9 +118,9 @@ void main() async {
 ### 7. Profile & Settings (`features/profile`)
 - **User Information**: Fetched directly from `UserRepository().getUser()` (`UserModel`).
 - **Profile Image**: Supports selecting images from Camera or Gallery (`image_picker`).
-- **Edit Details**: Bottom sheet to update username, email, and password.
-- **Country Selection**: Integrated `country_picker` allowing users to set regional preferences, persisted in `UserModel` and `PrefrenceManager`.
-- **Logout**: Clears session preferences and routes back to `LoginScreen`.
+- **Edit Details**: Bottom sheet to update username, email, and password in `UserRepository().updateUser(...)`.
+- **Country Selection**: Integrated `country_picker` allowing users to set regional preferences, persisted directly in `UserModel` via `UserRepository().updateUser(...)`.
+- **Logout**: Clears session via `UserRepository().logout()` and routes back to `LoginScreen`.
 
 ### 8. Bookmarks (`features/bookmark`)
 - Dedicated space to view and manage saved articles for offline or later reading.
@@ -132,8 +132,9 @@ void main() async {
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
 | **State Management** | `Provider` (`ChangeNotifier` + `SafeNotify`) | Reactive state handling without memory leaks on unmounted widgets |
+| **User Repository** | `UserRepository` (`Hive CE`) | Single source of truth for user profile, authentication, and session state |
 | **Local Database** | `Hive CE` (`hive_ce_flutter`) | Fast, type-safe NoSQL database storing `UserModel` |
-| **Key-Value Cache** | `shared_preferences` | Lightweight storage for flags (`is_loged_in`, `onboarding_compelete`) |
+| **Key-Value Cache** | `shared_preferences` | Lightweight storage for app onboarding flag (`onboarding_compelete`) |
 | **Networking** | `http` (`BaseApiService`) | REST API client communicating with NewsAPI |
 | **Image Caching** | `cached_network_image` | Efficient remote image loading and memory/disk caching |
 | **Screen Scaling** | `flutter_screenutil` | Density-independent UI scaling for width, height, and font sizes |
@@ -162,3 +163,4 @@ void main() async {
    ```bash
    flutter run
    ```
+

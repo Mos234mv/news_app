@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
+import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/profile/bottom%20sheet/profile_info_bottomsheet.dart';
@@ -131,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                       "Logout",
                       "assets/images/logout.svg",
                       () async {
-                        await PrefrenceManager().clear();
+                        await UserRepository().logout();
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

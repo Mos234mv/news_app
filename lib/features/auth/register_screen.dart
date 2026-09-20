@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 
 import 'package:news_app/features/Navigation/main_screen.dart';
@@ -46,7 +45,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
       return;
     }
-    await PrefrenceManager().setBool("is_loged_in", true);
     if (!mounted) return;
     setState(() {
       isLoading = false;

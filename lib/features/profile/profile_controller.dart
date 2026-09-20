@@ -1,7 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/core/mixin/safe_notifier_mixin.dart';
 import 'package:news_app/core/models/user_model.dart';
@@ -36,8 +35,6 @@ class ProfileController extends ChangeNotifier with SafeNotify {
       countryName: selectedCountry.name,
       countryCode: selectedCountry.countryCode,
     );
-    await PrefrenceManager().setString("country_name", selectedCountry.name);
-    await PrefrenceManager().setString("country_code", selectedCountry.countryCode);
     countryName = selectedCountry.name;
     countryCode = selectedCountry.countryCode;
 
