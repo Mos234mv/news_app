@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(height: AppSizes.ph8),
                     Center(
                       child: Text(
-                        PrefrenceManager().getString('username') ?? "",
+                        controller.userName ?? "",
                         style: TextStyle(color: Colors.black, fontSize: AppSizes.sp16),
                       ),
                     ),
