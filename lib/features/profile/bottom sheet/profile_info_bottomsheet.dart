@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
+import 'package:news_app/core/data_source/local_data/user_repository.dart';
+import 'package:news_app/core/models/user_model.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
 
 class ProfileInfoBottomsheet extends StatefulWidget {
@@ -26,15 +28,17 @@ class _ProfileInfoBottomsheetState extends State<ProfileInfoBottomsheet> {
   }
 
   void _loadUserData() {
-    emailController.text = PrefrenceManager().getString('user_email') ?? '';
-    usernameController.text = PrefrenceManager().getString('username') ?? '';
+    final UserModel user = UserRepository().getUser();
+    emailController.text = user.email ?? "";
+    usernameController.text = user.name ?? "";
   }
 
   void _saveData() async {
     if (formKey.currentState?.validate() ?? false) {
-      await PrefrenceManager().setString('user_email', emailController.text);
-
-      await PrefrenceManager().setString('username', usernameController.text);
+      UserRepository().updateUser(
+        email: emailController.text,
+        name: usernameController.text,
+      );
       Navigator.pop(context);
     }
   }
@@ -94,7 +98,9 @@ class _ProfileInfoBottomsheetState extends State<ProfileInfoBottomsheet> {
                       return "Please Enter Email";
                     }
 
-                    RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                    RegExp emailRegExp = RegExp(
+                      r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                    );
 
                     if (!emailRegExp.hasMatch(value)) {
                       return 'Please Enter Valid Email';

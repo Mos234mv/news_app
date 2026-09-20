@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
+import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
 import 'package:news_app/features/auth/register_screen.dart';
@@ -29,20 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
     await Future.delayed(Duration(seconds: 3));
-    final savedEmail = PrefrenceManager().getString('user_email');
-    final savedPassword = PrefrenceManager().getString('user_password');
+    final String? error = UserRepository().login(
+      emailController.text,
+      passwordController.text,
+    );
 
-    if (savedEmail == null || savedPassword == null) {
+    if (error != null) {
       setState(() {
-        errorMessage = 'No Account Found Please Register First';
-        isLoading = false;
-      });
-      return;
-    }
-
-    if (savedEmail != emailController.text || savedPassword != passwordController.text) {
-      setState(() {
-        errorMessage = 'Incorrect Email or Password';
+        errorMessage = error;
         isLoading = false;
       });
       return;
@@ -136,7 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     logIn();
                                   }
                                 },
-                                child: isLoading ? CircularProgressIndicator() : Text('Sign In'),
+                                child: isLoading
+                                    ? CircularProgressIndicator()
+                                    : Text('Sign In'),
                               ),
                             ),
                             SizedBox(height: AppSizes.ph24),

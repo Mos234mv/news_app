@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
+import 'package:news_app/core/data_source/local_data/user_repository.dart';
 
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
@@ -33,31 +34,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
     await Future.delayed(Duration(seconds: 3));
     if (!mounted) return;
-    final savedEmail = PrefrenceManager().getString('user_email');
-    if (savedEmail != null && savedEmail == emailController.text.trim()) {
+    final String? error = await UserRepository().signUp(
+      email: emailController.text,
+      password: passwordController.text,
+      name: usernameController.text,
+    );
+    if (error != null) {
       setState(() {
-        errorMessage = 'User Already Register';
+        errorMessage = error;
         isLoading = false;
       });
-    } else {
-      await PrefrenceManager().setString('user_email', emailController.text);
-      await PrefrenceManager().setString('username', usernameController.text);
-      await PrefrenceManager().setString('user_password', passwordController.text);
-      await PrefrenceManager().setBool("is_loged_in", true);
-      if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return LoginScreen();
-          },
-        ),
-      );
+      return;
     }
+    await PrefrenceManager().setBool("is_loged_in", true);
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return LoginScreen();
+        },
+      ),
+    );
   }
 
   @override
