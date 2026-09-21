@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/core/Theme/light_theme.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
+import 'package:news_app/features/bookmark/repository/bookmark_repository.dart';
 import 'package:news_app/features/splash/splash_screen.dart';
 
 void main() async {
@@ -10,6 +11,7 @@ void main() async {
   await ScreenUtil.ensureScreenSize(); // هنا يتم استخدامها بشكل صحيح
   await PrefrenceManager().init();
   await UserRepository().init();
+  await BookmarkRepository().init();
 
   runApp(const MyApp());
 }
