@@ -4,9 +4,7 @@ import 'package:news_app/core/Theme/light_theme.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/features/bookmark/repository/bookmark_repository.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
 import 'package:news_app/features/splash/splash_screen.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,18 +28,11 @@ class MyApp extends StatelessWidget {
 
       // تم حذف ensureSize من هنا لأنها غير موجودة كمتغير داخل ScreenUtilInit
       builder: (cxt, _) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => BookmarkController(),
-            ),
-          ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: light,
-            home: const SplashScreen(),
-          ),
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: light,
+          home: const SplashScreen(),
         );
       },
     );

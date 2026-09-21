@@ -19,7 +19,7 @@ class BookmarkRepository {
 
   Future<void> init() async {
     await Hive.initFlutter();
-    if (!Hive.isAdapterRegistered(1)) {
+    if (!Hive.isAdapterRegistered(Constants.bookmarkTypeId)) {
       Hive.registerAdapter(BookmarkModelAdapter());
     }
 
@@ -94,8 +94,7 @@ class BookmarkRepository {
           bookmark.author?.toLowerCase().contains(lowercaseQuery) ?? false;
 
       return titleMatch || descriptionMatch || authorMatch;
-    }).toList()
-      ..sort((a, b) => b.bookmarkedAt.compareTo(a.bookmarkedAt));
+    }).toList()..sort((a, b) => b.bookmarkedAt.compareTo(a.bookmarkedAt));
   }
 
   /// Clear all bookmarks

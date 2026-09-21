@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    await PrefrenceManager().setBool("is_loged_in", true);
+    await PrefrenceManager().setBool(Constants.isLogedIn, true);
 
     if (!mounted) return;
     Navigator.pushReplacement(

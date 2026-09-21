@@ -44,7 +44,10 @@ class BookmarkModel {
     DateTime? bookmarkedAt,
   }) : bookmarkedAt = bookmarkedAt ?? DateTime.now();
 
-  factory BookmarkModel.fromNewsArticle(NewsArticleModel article, {DateTime? bookmarkedAt}) {
+  factory BookmarkModel.fromNewsArticle(
+    NewsArticleModel article, {
+    DateTime? bookmarkedAt,
+  }) {
     return BookmarkModel(
       title: article.title,
       url: article.url,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/login_screen.dart';
@@ -21,8 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigtionAfterSplash() async {
     await Future.delayed(Duration(seconds: 5));
     final bool isOnboardingComplete =
-        PrefrenceManager().getBool("onboarding_compelete") ?? false;
-    final bool isLogin = PrefrenceManager().getBool("is_loged_in") ?? false;
+        PrefrenceManager().getBool(Constants.isOnboardingComplete) ?? false;
+    final bool isLogin = PrefrenceManager().getBool(Constants.isLogedIn) ?? false;
     if (!mounted) return;
     if (!isOnboardingComplete) {
       Navigator.pushReplacement(

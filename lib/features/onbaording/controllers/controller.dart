@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 
@@ -25,7 +26,7 @@ class OnboardingProvider with ChangeNotifier {
   }
 
   Future<void> onFinishOnboarding(BuildContext context) async {
-    await PrefrenceManager().setBool("onboarding_compelete", true);
+    await PrefrenceManager().setBool(Constants.isOnboardingComplete, true);
     if (!context.mounted) return;
     Navigator.push(
       context,
