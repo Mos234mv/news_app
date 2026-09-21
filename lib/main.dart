@@ -17,11 +17,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => BookmarkController(),
-        ),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => BookmarkController())],
       child: const MyApp(),
     ),
   );

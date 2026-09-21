@@ -3,6 +3,7 @@ import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
+import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/Home/components/news_item.dart';
 import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
 import 'package:provider/provider.dart';
@@ -27,14 +28,48 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Clear All Bookmarks?'),
-        content: const Text(
+        backgroundColor: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r16)),
+        title: Text(
+          'Clear All Bookmarks?',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: AppSizes.sp18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        content: Text(
           'Are you sure you want to remove all saved articles? This action cannot be undone.',
+          style: TextStyle(
+            color: const Color(0xFFD1DAD6),
+            fontSize: AppSizes.sp14,
+            fontWeight: FontWeight.w400,
+            height: 1.4,
+          ),
+        ),
+        actionsPadding: EdgeInsets.symmetric(
+          horizontal: AppSizes.pw16,
+          vertical: AppSizes.ph12,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFA0A0A0)),
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: LightColor.primaryColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: LightColor.primaryColor,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.r8),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.pw16,
+                vertical: AppSizes.ph10,
+              ),
+            ),
             onPressed: () async {
               Navigator.pop(ctx);
               await controller.clearAllBookmarks();
@@ -59,8 +94,10 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Mark'),
+        title: const Text('Bookmark'),
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         actions: [
           Consumer<BookmarkController>(
             builder: (context, controller, child) {
@@ -85,7 +122,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
 
           return Column(
             children: [
-              // Search bar
+              // Search bar matching Figma search input
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: AppSizes.pw16,
@@ -102,15 +139,14 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: AppSizes.pw16,
-                      vertical: AppSizes.ph10,
+                      vertical: AppSizes.ph12,
                     ),
-                    hintText: "Search bookmarks...",
+                    hintText: "Search",
                     hintStyle: TextStyle(
                       color: const Color(0xFFA0A0A0),
                       fontSize: AppSizes.sp14,
                       fontWeight: FontWeight.w400,
                     ),
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFFA0A0A0)),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
@@ -120,16 +156,20 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                               setState(() {});
                             },
                           )
-                        : null,
+                        : const Icon(Icons.search, color: Color(0xFFA0A0A0)),
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.r8),
-                      borderSide: const BorderSide(color: Color(0xFFD1DAD6)),
+                      borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSizes.r8),
-                      borderSide: const BorderSide(color: Color(0xFFD1DAD6)),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSizes.r8),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
@@ -138,12 +178,12 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
               // Content Area
               Expanded(
                 child: articles.isEmpty
-                    ? _buildEmptyState(
-                        context,
+                    ? BookmarkEmptyState(
                         isSearching: _searchController.text.trim().isNotEmpty,
                       )
                     : ListView.builder(
                         itemCount: articles.length,
+                        padding: EdgeInsets.only(bottom: AppSizes.ph16),
                         itemBuilder: (context, index) {
                           final article = articles[index];
                           return Dismissible(
@@ -198,8 +238,15 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
       ),
     );
   }
+}
 
-  Widget _buildEmptyState(BuildContext context, {required bool isSearching}) {
+class BookmarkEmptyState extends StatelessWidget {
+  const BookmarkEmptyState({super.key, required this.isSearching});
+
+  final bool isSearching;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppSizes.pw32),
@@ -212,20 +259,27 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 color: LightColor.primaryColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                isSearching ? Icons.search_off : Icons.bookmark_border,
-                size: AppSizes.h56,
-                color: LightColor.primaryColor,
-              ),
+              child: isSearching
+                  ? Icon(
+                      Icons.search_off,
+                      size: AppSizes.h48,
+                      color: LightColor.primaryColor,
+                    )
+                  : CustomSvgPicture(
+                      path: Constants.bookmarkIcon,
+                      height: AppSizes.h40,
+                      width: AppSizes.w32,
+                      withColor: true,
+                    ),
             ),
             SizedBox(height: AppSizes.ph16),
             Text(
-              isSearching ? 'No Results Found' : 'No Bookmarks Yet',
+              isSearching ? 'No Results Found' : Constants.noBookmarksMessage,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: AppSizes.ph8),
             Text(
-              isSearching ? 'Try searching with a different keyword' : 'Articles you bookmark will appear here so you can easily read them later offline.',
+              isSearching ? 'Try searching with a different keyword' : 'Articles you bookmark will appear here so you can easily read them later.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall,
             ),

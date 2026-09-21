@@ -11,6 +11,7 @@ import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/profile/bottom%20sheet/profile_info_bottomsheet.dart';
 import 'package:news_app/features/profile/profile_controller.dart';
+import 'package:news_app/features/profile/terms_and_conditions_screen.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -123,11 +124,16 @@ class ProfileScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    _buildProfileItem(
-                      "Terms & Conditions",
-                      "assets/images/condationicon.svg",
-                      () {},
-                    ),
+                    _buildProfileItem("Terms & Conditions", Constants.conditionIcon, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return const TermsAndConditionsScreen();
+                          },
+                        ),
+                      );
+                    }),
                     _buildProfileItem(
                       "Logout",
                       "assets/images/logout.svg",

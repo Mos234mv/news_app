@@ -120,6 +120,7 @@ void main() async {
 - **Profile Image**: Supports selecting images from Camera or Gallery (`image_picker`).
 - **Edit Details**: Bottom sheet to update username, email, and password in `UserRepository().updateUser(...)`.
 - **Country Selection**: Integrated `country_picker` allowing users to set regional preferences, persisted directly in `UserModel` via `UserRepository().updateUser(...)`.
+- **Terms & Conditions**: Dedicated [`TermsAndConditionsScreen`](lib/features/profile/terms_and_conditions_screen.dart) detailing terms of service, content copyright, and privacy policies.
 - **Logout**: Sets `is_loged_in` to `false` in `PrefrenceManager` (preserving `onboarding_compelete`) and routes back to `LoginScreen`.
 
 ### 8. Bookmarks (`features/bookmark`)
@@ -128,6 +129,8 @@ void main() async {
 - **State Management (`BookmarkController`)**: Provided globally via `MultiProvider` in `main.dart`, manages reactive state using `RequestStytasEnum` (`loding`, `loded`, `error`), maintains fast $O(1)$ `bookmarkedUrls` Set, and provides search and feedback methods.
 - **Shared Reusable Widget (`BookmarkButton`)**: Centralized in `lib/core/widgets/bookmark_button.dart` and integrated into `NewsItem`, `TrendingNews`, and `NewsDetails` with dynamic color toggling and SnackBar alerts.
 - **Bookmark Screen (`BookmarkScreen`)**: Features a real-time search bar, swipe-to-dismiss deletion (`Dismissible`) with undo option, empty state illustrations, and a "Clear All" action dialog.
+- **Dynamic Bottom Navigation Badge (`MainScreen`)**: Displays a real-time count badge on the Bookmark tab via `Badge.count`, reacting immediately to bookmark additions and removals, with tab state preserved via `IndexedStack`.
+- **Search Integration (`SearchScreen`)**: Each search result item is equipped with the reactive `BookmarkButton`, allowing users to bookmark articles directly from query results.
 
 ---
 

@@ -14,6 +14,7 @@ class Constants {
 
   // Assets
   static const String bookmarkIcon = "assets/images/book_mark.svg";
+  static const String conditionIcon = "assets/images/condationicon.svg";
 
   // Messages
   static const String bookmarkAddedMessage = "Article added to bookmarks";
