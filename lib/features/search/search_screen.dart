@@ -9,7 +9,7 @@ import 'package:news_app/features/search/search_controller.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
-  SearchScreen({super.key});
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

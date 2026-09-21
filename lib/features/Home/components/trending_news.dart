@@ -78,7 +78,7 @@ class TrendingNews extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                  child: Container(
+                                  child: SizedBox(
                                     width: AppSizes.w240,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(AppSizes.r12),

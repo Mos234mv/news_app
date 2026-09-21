@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
     await Future.delayed(Duration(seconds: 3));
-    final String? error = await UserRepository().login(
+    final String? error = UserRepository().login(
       emailController.text,
       passwordController.text,
     );
@@ -41,6 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       return;
     }
+
+    await PrefrenceManager().setBool("is_loged_in", true);
 
     if (!mounted) return;
     Navigator.pushReplacement(

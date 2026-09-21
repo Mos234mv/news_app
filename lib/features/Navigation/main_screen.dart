@@ -7,7 +7,7 @@ import 'package:news_app/features/profile/profile_screen.dart';
 import 'package:news_app/features/search/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();

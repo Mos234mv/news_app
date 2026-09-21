@@ -1,9 +1,5 @@
-// ignore_for_file: unused_field, unnecessary_import
-
-import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:news_app/core/constant/constants.dart';
-import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/models/user_model.dart';
 
 class UserRepository {
@@ -33,18 +29,6 @@ class UserRepository {
 
   UserModel? getUser() => userBox.get(Constants.currentUser);
 
-  bool isLoggedIn() {
-    return PrefrenceManager().getBool("is_loged_in") ?? false;
-  }
-
-  Future<void> setLoggedIn(bool value) async {
-    await PrefrenceManager().setBool("is_loged_in", value);
-  }
-
-  Future<void> logout() async {
-    await setLoggedIn(false);
-  }
-
   Future<void> updateUser({
     String? name,
     String? email,
@@ -69,15 +53,13 @@ class UserRepository {
 
   Future<void> delete() async {
     await userBox.delete(Constants.currentUser);
-    await logout();
   }
 
   Future<void> clearAll() async {
     await userBox.clear();
-    await logout();
   }
 
-  Future<String?> login(String email, String password) async {
+  String? login(String email, String password) {
     final user = getUser();
 
     if (user == null) {
@@ -88,7 +70,6 @@ class UserRepository {
       return "Incorrect Email or Password";
     }
 
-    await setLoggedIn(true);
     return null;
   }
 

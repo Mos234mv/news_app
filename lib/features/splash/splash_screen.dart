@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
-import 'package:news_app/core/data_source/local_data/user_repository.dart';
 import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/onbaording/onboarding_screen.dart';
@@ -21,10 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigtionAfterSplash() async {
     await Future.delayed(Duration(seconds: 5));
-    final bool Onboarding = PrefrenceManager().getBool("onboarding_compelete") ?? false;
-    final bool islogin = UserRepository().isLoggedIn();
+    final bool isOnboardingComplete = PrefrenceManager().getBool("onboarding_compelete") ?? false;
+    final bool isLogin = PrefrenceManager().getBool("is_loged_in") ?? false;
     if (!mounted) return;
-    if (!Onboarding) {
+    if (!isOnboardingComplete) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -33,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           },
         ),
       );
-    } else if (!islogin) {
+    } else if (!isLogin) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -56,6 +55,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Image.asset('assets/images/splash.png', width: double.infinity));
+    return Scaffold(
+      body: Image.asset('assets/images/splash.png', width: double.infinity),
+    );
   }
 }

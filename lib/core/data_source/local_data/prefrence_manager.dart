@@ -32,7 +32,7 @@ class PrefrenceManager {
     return _preferences.getBool(key);
   }
 
-  clear() async {
+  Future<void> clear() async {
     await _preferences.clear();
   }
 }

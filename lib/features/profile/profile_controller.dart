@@ -22,7 +22,7 @@ class ProfileController extends ChangeNotifier with SafeNotify {
     safeNotify();
   }
 
-  getUserData() {
+  void getUserData() {
     final UserModel? user = UserRepository().getUser();
     userName = user?.name ?? "";
     countryName = user?.countryName;

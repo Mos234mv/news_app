@@ -21,8 +21,9 @@ class OnboardingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onFinishOnboarding(BuildContext context) async {
+  Future<void> onFinishOnboarding(BuildContext context) async {
     await PrefrenceManager().setBool("onboarding_compelete", true);
+    if (!context.mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(

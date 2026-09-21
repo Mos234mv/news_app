@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
 
-import 'package:news_app/features/Navigation/main_screen.dart';
 import 'package:news_app/features/auth/customtextformfilled.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 

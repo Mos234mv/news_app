@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/core/Theme/light_theme.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
-import 'package:news_app/features/profile/profile_screen.dart';
 import 'package:news_app/features/splash/splash_screen.dart';
 
 void main() async {

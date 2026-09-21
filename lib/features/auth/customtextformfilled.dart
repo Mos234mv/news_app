@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 
 class CustomTextFormFilled extends StatefulWidget {
-  CustomTextFormFilled({
+  const CustomTextFormFilled({
     super.key,
 
     required this.controller,

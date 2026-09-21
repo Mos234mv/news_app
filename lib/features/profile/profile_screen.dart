@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:news_app/core/data_source/local_data/user_repository.dart';
+import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/profile/bottom%20sheet/profile_info_bottomsheet.dart';
@@ -110,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
                               prefixIcon: const Icon(Icons.search),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: const Color(0xFF8C98A8).withOpacity(0.2),
+                                  color: const Color(0xFF8C98A8).withValues(alpha: 0.2),
                                 ),
                               ),
                             ),
@@ -131,7 +131,8 @@ class ProfileScreen extends StatelessWidget {
                       "Logout",
                       "assets/images/logout.svg",
                       () async {
-                        await UserRepository().logout();
+                        await PrefrenceManager().setBool("is_loged_in", false);
+                        if (!context.mounted) return;
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -244,7 +245,7 @@ Widget _buildProfileItem(
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.pw8),
       ),
-      if (isDivider) Divider(color: Color(0x1ffD1DAD6), thickness: 2),
+      if (isDivider) Divider(color: Color(0xFFD1DAD6), thickness: 2),
     ],
   );
 }
