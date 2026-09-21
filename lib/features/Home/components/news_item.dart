@@ -26,10 +26,7 @@ class NewsItem extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.pw16,
-          vertical: AppSizes.ph8,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.pw16, vertical: AppSizes.ph8),
         child: Row(
           children: [
             ClipRRect(
