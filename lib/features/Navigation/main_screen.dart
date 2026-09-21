@@ -36,10 +36,7 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: "Bookmark",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Bookmark"),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_off_outlined),
             label: "Profile",

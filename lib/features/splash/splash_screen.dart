@@ -20,7 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigtionAfterSplash() async {
     await Future.delayed(Duration(seconds: 5));
-    final bool isOnboardingComplete = PrefrenceManager().getBool("onboarding_compelete") ?? false;
+    final bool isOnboardingComplete =
+        PrefrenceManager().getBool("onboarding_compelete") ?? false;
     final bool isLogin = PrefrenceManager().getBool("is_loged_in") ?? false;
     if (!mounted) return;
     if (!isOnboardingComplete) {
