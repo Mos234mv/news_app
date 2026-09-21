@@ -26,14 +26,21 @@ class BookmarkRepository {
     _bookmarkBox = await Hive.openBox<BookmarkModel>(Constants.bookmarkBox);
   }
 
-  /// Add a bookmark
-  Future<void> addBookmark(BookmarkModel bookmark) async {
-    await bookmarkBox.put(bookmark.url, bookmark);
-  }
+  /// Add a bookmark from NewsArticleModel
+  Future<void> addBookmark(NewsArticleModel article) async {
+    final bookmark = BookmarkModel(
+      author: article.author,
+      title: article.title,
+      description: article.description,
+      url: article.url,
+      urlToImage: article.urlToImage,
+      publishedAt: article.publishedAt,
+      content: article.content,
+      bookmarkedAt: DateTime.now(),
+      sourceName: article.source.name,
+    );
 
-  /// Alias for addBookmark
-  Future<void> saveBookmark(BookmarkModel bookmark) async {
-    await addBookmark(bookmark);
+    await bookmarkBox.put(article.url, bookmark);
   }
 
   /// Remove a bookmark by article URL
@@ -43,12 +50,12 @@ class BookmarkRepository {
 
   /// Toggle bookmark: adds if not present, removes if already present.
   /// Returns `true` if added, `false` if removed.
-  Future<bool> toggleBookmark(BookmarkModel bookmark) async {
-    if (isBookmarked(bookmark.url)) {
-      await removeBookmark(bookmark.url);
+  Future<bool> toggleBookmark(NewsArticleModel article) async {
+    if (isBookmarked(article.url)) {
+      await removeBookmark(article.url);
       return false;
     } else {
-      await addBookmark(bookmark);
+      await addBookmark(article);
       return true;
     }
   }
@@ -61,24 +68,34 @@ class BookmarkRepository {
   /// Get total count of saved bookmarks
   int get bookmarkCount => bookmarkBox.length;
 
-  int getBookmarkCount() => bookmarkBox.length;
+  int getBookmarkCount() {
+    return bookmarkBox.length;
+  }
 
-  /// Get all bookmarks, sorted from newest to oldest
+  /// Get all bookmarks sorted from newest to oldest
   List<BookmarkModel> getBookmarks() {
-    return bookmarkBox.values.toList().reversed.toList();
+    return bookmarkBox.values.toList()
+      ..sort((a, b) => b.bookmarkedAt.compareTo(a.bookmarkedAt));
+  }
+
+  /// Get all bookmarked articles as NewsArticleModel
+  List<NewsArticleModel> getBookmarkedArticles() {
+    return getBookmarks().map((b) => bookmarkToArticle(b)).toList();
   }
 
   /// Search bookmarks by title, description, or author
   List<BookmarkModel> searchBookmarks(String query) {
-    final lowerQuery = query.trim().toLowerCase();
-    if (lowerQuery.isEmpty) return getBookmarks();
-
+    final lowercaseQuery = query.toLowerCase();
     return bookmarkBox.values.where((bookmark) {
-      final matchesTitle = bookmark.title.toLowerCase().contains(lowerQuery);
-      final matchesDesc = bookmark.description?.toLowerCase().contains(lowerQuery) ?? false;
-      final matchesAuthor = bookmark.author?.toLowerCase().contains(lowerQuery) ?? false;
-      return matchesTitle || matchesDesc || matchesAuthor;
-    }).toList().reversed.toList();
+      final titleMatch = bookmark.title.toLowerCase().contains(lowercaseQuery);
+      final descriptionMatch =
+          bookmark.description?.toLowerCase().contains(lowercaseQuery) ?? false;
+      final authorMatch =
+          bookmark.author?.toLowerCase().contains(lowercaseQuery) ?? false;
+
+      return titleMatch || descriptionMatch || authorMatch;
+    }).toList()
+      ..sort((a, b) => b.bookmarkedAt.compareTo(a.bookmarkedAt));
   }
 
   /// Clear all bookmarks
@@ -91,30 +108,32 @@ class BookmarkRepository {
     await clearAllBookmarks();
   }
 
-  // --- NewsArticleModel Conversion Helpers ---
-
-  /// Convert a BookmarkModel to NewsArticleModel
-  NewsArticleModel convertToNewsArticle(BookmarkModel bookmark) {
-    return bookmark.toNewsArticle();
+  /// convert BookmarkModel to NewsArticleModel
+  NewsArticleModel bookmarkToArticle(BookmarkModel bookmark) {
+    return NewsArticleModel(
+      author: bookmark.author,
+      title: bookmark.title,
+      description: bookmark.description,
+      url: bookmark.url,
+      urlToImage: bookmark.urlToImage,
+      publishedAt: bookmark.publishedAt,
+      content: bookmark.content,
+      source: Source(name: bookmark.sourceName),
+    );
   }
 
-  /// Convert a NewsArticleModel to BookmarkModel
-  BookmarkModel convertToBookmarkModel(NewsArticleModel article) {
-    return BookmarkModel.fromNewsArticle(article);
-  }
-
-  /// Add a bookmark directly from a NewsArticleModel
-  Future<void> addBookmarkFromArticle(NewsArticleModel article) async {
-    await addBookmark(BookmarkModel.fromNewsArticle(article));
-  }
-
-  /// Toggle bookmark directly with a NewsArticleModel
-  Future<bool> toggleBookmarkFromArticle(NewsArticleModel article) async {
-    return await toggleBookmark(BookmarkModel.fromNewsArticle(article));
-  }
-
-  /// Get all saved bookmarks directly as NewsArticleModel objects
-  List<NewsArticleModel> getBookmarkedArticles() {
-    return getBookmarks().map((b) => b.toNewsArticle()).toList();
+  /// convert NewsArticleModel to BookmarkModel
+  BookmarkModel articleToBookmark(NewsArticleModel article) {
+    return BookmarkModel(
+      author: article.author,
+      title: article.title,
+      description: article.description,
+      url: article.url,
+      urlToImage: article.urlToImage,
+      publishedAt: article.publishedAt,
+      content: article.content,
+      bookmarkedAt: DateTime.now(),
+      sourceName: article.source.name,
+    );
   }
 }

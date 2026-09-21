@@ -24,14 +24,15 @@ class BookmarkModelAdapter extends TypeAdapter<BookmarkModel> {
       description: fields[4] as String?,
       content: fields[5] as String?,
       publishedAt: fields[6] as DateTime,
-      sourceName: fields[7] as String,
+      sourceName: (fields[7] as String?) ?? '',
+      bookmarkedAt: fields[8] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, BookmarkModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class BookmarkModelAdapter extends TypeAdapter<BookmarkModel> {
       ..writeByte(6)
       ..write(obj.publishedAt)
       ..writeByte(7)
-      ..write(obj.sourceName);
+      ..write(obj.sourceName)
+      ..writeByte(8)
+      ..write(obj.bookmarkedAt);
   }
 
   @override

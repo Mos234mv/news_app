@@ -29,6 +29,9 @@ class BookmarkModel {
   @HiveField(7)
   final String sourceName;
 
+  @HiveField(8)
+  final DateTime bookmarkedAt;
+
   BookmarkModel({
     required this.title,
     required this.url,
@@ -37,10 +40,11 @@ class BookmarkModel {
     this.description,
     this.content,
     required this.publishedAt,
-    required this.sourceName,
-  });
+    this.sourceName = '',
+    DateTime? bookmarkedAt,
+  }) : bookmarkedAt = bookmarkedAt ?? DateTime.now();
 
-  factory BookmarkModel.fromNewsArticle(NewsArticleModel article) {
+  factory BookmarkModel.fromNewsArticle(NewsArticleModel article, {DateTime? bookmarkedAt}) {
     return BookmarkModel(
       title: article.title,
       url: article.url,
@@ -50,6 +54,7 @@ class BookmarkModel {
       content: article.content,
       publishedAt: article.publishedAt,
       sourceName: article.source.name,
+      bookmarkedAt: bookmarkedAt ?? DateTime.now(),
     );
   }
 
