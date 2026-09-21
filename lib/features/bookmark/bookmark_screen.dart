@@ -32,14 +32,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
           'Are you sure you want to remove all saved articles? This action cannot be undone.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: LightColor.primaryColor,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: LightColor.primaryColor),
             onPressed: () async {
               Navigator.pop(ctx);
               await controller.clearAllBookmarks();
@@ -179,9 +174,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: const Text(
-                                      Constants.bookmarkRemovedMessage,
-                                    ),
+                                    content: const Text(Constants.bookmarkRemovedMessage),
                                     duration: const Duration(seconds: 3),
                                     action: SnackBarAction(
                                       label: 'Undo',
@@ -232,9 +225,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
             ),
             SizedBox(height: AppSizes.ph8),
             Text(
-              isSearching
-                  ? 'Try searching with a different keyword'
-                  : 'Articles you bookmark will appear here so you can easily read them later offline.',
+              isSearching ? 'Try searching with a different keyword' : 'Articles you bookmark will appear here so you can easily read them later offline.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall,
             ),

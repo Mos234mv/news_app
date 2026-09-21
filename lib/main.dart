@@ -3,17 +3,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/core/Theme/light_theme.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
+import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
 import 'package:news_app/features/bookmark/repository/bookmark_repository.dart';
 import 'package:news_app/features/splash/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ScreenUtil.ensureScreenSize(); // هنا يتم استخدامها بشكل صحيح
+  await ScreenUtil.ensureScreenSize();
   await PrefrenceManager().init();
   await UserRepository().init();
   await BookmarkRepository().init();
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => BookmarkController(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,8 +36,6 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 832),
       minTextAdapt: true,
       splitScreenMode: true,
-
-      // تم حذف ensureSize من هنا لأنها غير موجودة كمتغير داخل ScreenUtilInit
       builder: (cxt, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
