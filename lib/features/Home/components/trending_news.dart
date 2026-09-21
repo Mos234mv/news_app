@@ -5,6 +5,7 @@ import 'package:news_app/core/constant/app_sizes.dart';
 
 import 'package:news_app/core/enums/request_stytas_enum.dart';
 import 'package:news_app/core/extentions/date_time_extention.dart';
+import 'package:news_app/core/widgets/bookmark_button.dart';
 import 'package:news_app/core/widgets/custom_cached_network_image.dart';
 import 'package:news_app/features/Home/components/trending_news_shimmer.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
@@ -93,7 +94,6 @@ class TrendingNews extends StatelessWidget {
                                                   width: AppSizes.w240,
                                                   height: AppSizes.h140,
                                                 ),
-
                                               Positioned.fill(
                                                 child: Container(
                                                   decoration: BoxDecoration(
@@ -110,6 +110,14 @@ class TrendingNews extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                top: AppSizes.ph8,
+                                                right: AppSizes.pw8,
+                                                child: BookmarkButton(
+                                                  article: model,
+                                                  inactiveColor: Colors.white,
                                                 ),
                                               ),
                                               Positioned(

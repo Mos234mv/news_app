@@ -1,17 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/extentions/date_time_extention.dart';
+import 'package:news_app/core/widgets/bookmark_button.dart';
 import 'package:news_app/core/widgets/custom_cached_network_image.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
-import 'package:provider/provider.dart';
 
 class NewsDetails extends StatelessWidget {
   const NewsDetails({super.key, required this.model});
   final NewsArticleModel model;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,31 +18,12 @@ class NewsDetails extends StatelessWidget {
         title: const Text("News Details"),
         centerTitle: true,
         actions: [
-          Consumer<BookmarkController>(
-            builder: (context, bookmarkController, child) {
-              final bool isBookmarked = bookmarkController.isBookmarked(model.url);
-              return IconButton(
-                icon: Icon(
-                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                  color: isBookmarked ? LightColor.primaryColor : const Color(0xFF363636),
-                ),
-                onPressed: () async {
-                  final bool isAdded = await bookmarkController.toggleBookmark(model);
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(bookmarkController.getSuccessMessage(isAdded)),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                },
-              );
-            },
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.pw16),
+            child: BookmarkButton(article: model),
           ),
         ],
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(AppSizes.pw16),
@@ -58,16 +38,13 @@ class NewsDetails extends StatelessWidget {
                   width: double.infinity,
                 ),
               ),
-
               SizedBox(height: AppSizes.ph16),
-
               Text(
                 model.title,
                 style: Theme.of(context).textTheme.titleLarge!
                     .copyWith(fontSize: AppSizes.sp20),
               ),
               SizedBox(height: AppSizes.ph16),
-
               Row(
                 children: [
                   if (model.urlToImage != null)
@@ -85,7 +62,7 @@ class NewsDetails extends StatelessWidget {
                             min((model.author ?? "").length, 10),
                           ),
                           style: TextStyle(
-                            color: Color(0xFF141414),
+                            color: const Color(0xFF141414),
                             fontSize: AppSizes.sp14,
                             fontWeight: FontWeight.w400,
                           ),
@@ -95,48 +72,19 @@ class NewsDetails extends StatelessWidget {
                           child: Text(
                             model.publishedAt.formatDateTime(),
                             style: TextStyle(
-                              color: Color(0xFF141414),
+                              color: const Color(0xFF141414),
                               fontSize: AppSizes.sp14,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
-                        Consumer<BookmarkController>(
-                          builder: (context, bookmarkController, child) {
-                            final bool isBookmarked =
-                                bookmarkController.isBookmarked(model.url);
-                            return GestureDetector(
-                              onTap: () async {
-                                final bool isAdded =
-                                    await bookmarkController.toggleBookmark(model);
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      bookmarkController.getSuccessMessage(isAdded),
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              },
-                              child: Icon(
-                                isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                                color: isBookmarked
-                                    ? LightColor.primaryColor
-                                    : const Color(0xFF363636),
-                                size: AppSizes.h24,
-                              ),
-                            );
-                          },
-                        ),
+                        BookmarkButton(article: model),
                       ],
                     ),
                   ),
                 ],
               ),
               SizedBox(height: AppSizes.ph16),
-
               Text(
                 model.description ?? "",
                 style: Theme.of(context).textTheme.displayLarge,

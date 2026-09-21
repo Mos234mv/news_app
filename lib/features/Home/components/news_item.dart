@@ -1,14 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/extentions/date_time_extention.dart';
+import 'package:news_app/core/widgets/bookmark_button.dart';
 import 'package:news_app/core/widgets/custom_cached_network_image.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
 import 'package:news_app/features/deatails/news_details.dart';
-import 'package:provider/provider.dart';
 
 class NewsItem extends StatelessWidget {
   const NewsItem({super.key, required this.model});
@@ -28,7 +26,10 @@ class NewsItem extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.pw16, vertical: AppSizes.ph8),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.pw16,
+          vertical: AppSizes.ph8,
+        ),
         child: Row(
           children: [
             ClipRRect(
@@ -41,7 +42,11 @@ class NewsItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(model.title, style: Theme.of(context).textTheme.titleLarge, maxLines: 2),
+                  Text(
+                    model.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    maxLines: 2,
+                  ),
                   Row(
                     children: [
                       if (model.urlToImage != null)
@@ -72,35 +77,7 @@ class NewsItem extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Consumer<BookmarkController>(
-                              builder: (context, bookmarkController, child) {
-                                final bool isBookmarked =
-                                    bookmarkController.isBookmarked(model.url);
-                                return GestureDetector(
-                                  onTap: () async {
-                                    final bool isAdded =
-                                        await bookmarkController.toggleBookmark(model);
-                                    if (!context.mounted) return;
-                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          bookmarkController.getSuccessMessage(isAdded),
-                                        ),
-                                        duration: const Duration(seconds: 1),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(
-                                    isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                                    color: isBookmarked
-                                        ? LightColor.primaryColor
-                                        : const Color(0xFF363636),
-                                    size: AppSizes.h24,
-                                  ),
-                                );
-                              },
-                            ),
+                            BookmarkButton(article: model),
                           ],
                         ),
                       ),
