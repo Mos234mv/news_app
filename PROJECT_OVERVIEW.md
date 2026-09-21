@@ -123,7 +123,11 @@ void main() async {
 - **Logout**: Sets `is_loged_in` to `false` in `PrefrenceManager` (preserving `onboarding_compelete`) and routes back to `LoginScreen`.
 
 ### 8. Bookmarks (`features/bookmark`)
-- Dedicated space to view and manage saved articles for offline or later reading.
+- **Offline Persistence**: Uses Hive CE (`bookmarkBox`) storing `BookmarkModel` objects sorted by `bookmarkedAt` timestamp.
+- **Repository (`BookmarkRepository`)**: Manages CRUD operations (`addBookmark`, `removeBookmark`, `toggleBookmark`, `isBookmarked`, `getBookmarks`, `searchBookmarks`, `clearAllBookmarks`) and bidirectional conversion helpers (`bookmarkToArticle`, `articleToBookmark`).
+- **State Management (`BookmarkController`)**: Provided globally via `MultiProvider` in `main.dart`, manages reactive state using `RequestStytasEnum` (`loding`, `loded`, `error`), maintains fast $O(1)$ `bookmarkedUrls` Set, and provides search and feedback methods.
+- **Shared Reusable Widget (`BookmarkButton`)**: Centralized in `lib/core/widgets/bookmark_button.dart` and integrated into `NewsItem`, `TrendingNews`, and `NewsDetails` with dynamic color toggling and SnackBar alerts.
+- **Bookmark Screen (`BookmarkScreen`)**: Features a real-time search bar, swipe-to-dismiss deletion (`Dismissible`) with undo option, empty state illustrations, and a "Clear All" action dialog.
 
 ---
 
@@ -132,8 +136,11 @@ void main() async {
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
 | **State Management** | `Provider` (`ChangeNotifier` + `SafeNotify`) | Reactive state handling without memory leaks on unmounted widgets |
-| **User Repository** | `UserRepository` (`Hive CE`) | Single source of truth for user profile data (`UserModel`) |
-| **Local Database** | `Hive CE` (`hive_ce_flutter`) | Fast, type-safe NoSQL database storing `UserModel` (`name`, `email`, `password`, `countryName`, `countryCode`) |
+| **User Repository** | `UserRepository` (`Hive CE`) | Single source of truth for user profile data (`UserModel`, typeId: 0) |
+| **Bookmark Repository** | `BookmarkRepository` (`Hive CE`) | Single source of truth for saved articles (`BookmarkModel`, typeId: 1) |
+| **Bookmark State** | `BookmarkController` (`Provider`) | App-wide reactive bookmark status, search, and instant UI sync |
+| **Shared Widgets** | `BookmarkButton` | Universal, reactive toggle button used in feeds and details |
+| **Local Database** | `Hive CE` (`hive_ce_flutter`) | Fast, type-safe NoSQL database storing users and bookmarks |
 | **Key-Value Cache** | `shared_preferences` (`PrefrenceManager`) | Lightweight storage for app session flags (`is_loged_in`, `onboarding_compelete`) |
 | **Networking** | `http` (`BaseApiService`) | REST API client communicating with NewsAPI |
 | **Image Caching** | `cached_network_image` | Efficient remote image loading and memory/disk caching |
