@@ -5,7 +5,6 @@ import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/features/Home/categories_Screen.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
 import 'package:news_app/features/Home/cubit/cubit/home_cubit.dart';
-import 'package:provider/provider.dart';
 
 class CategoriesList extends StatelessWidget {
   CategoriesList({super.key});
@@ -29,12 +28,13 @@ class CategoriesList extends StatelessWidget {
                 title: 'Categories',
                 titleColor: Color(0xFF141414),
                 onTap: () {
+                  final homeCubit = context.read<HomeCubit>();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) {
+                      builder: (_) {
                         return BlocProvider.value(
-                          value: context.read(),
+                          value: homeCubit,
                           child: CategoriesScreen(),
                         );
                       },

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
 import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/Home/components/news_item.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:news_app/features/bookmark/cubit/book_mark_cubit.dart';
 
 class BookmarkScreen extends StatefulWidget {
   const BookmarkScreen({super.key});
@@ -24,7 +24,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     super.dispose();
   }
 
-  void _showClearAllDialog(BuildContext context, BookmarkController controller) {
+  void _showClearAllDialog(BuildContext context, BookMarkCubit cubit) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -72,7 +72,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
             ),
             onPressed: () async {
               Navigator.pop(ctx);
-              await controller.clearAllBookmarks();
+              await cubit.clearAllBookmarks();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -92,147 +92,157 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookmark'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        actions: [
-          Consumer<BookmarkController>(
-            builder: (context, controller, child) {
-              if (controller.bookmarkCount == 0) return const SizedBox.shrink();
-              return IconButton(
-                tooltip: 'Clear all bookmarks',
-                icon: const Icon(Icons.delete_sweep_outlined),
-                onPressed: () => _showClearAllDialog(context, controller),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Consumer<BookmarkController>(
-        builder: (context, controller, child) {
-          if (controller.status == RequestStytasEnum.loding &&
-              controller.bookmarks.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final articles = controller.bookmarkedArticles;
-
-          return Column(
-            children: [
-              // Search bar matching Figma search input
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.pw16,
-                  vertical: AppSizes.ph8,
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  maxLines: 1,
-                  textAlignVertical: TextAlignVertical.center,
-                  onChanged: (value) {
-                    controller.searchBookmarks(value);
+    return BlocProvider(
+      create: (BuildContext context) => BookMarkCubit(),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Bookmark'),
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              actions: [
+                BlocBuilder<BookMarkCubit, BookMarkState>(
+                  builder: (context, state) {
+                    if (state.bookmarkCount == 0) return const SizedBox.shrink();
+                    return IconButton(
+                      tooltip: 'Clear all bookmarks',
+                      icon: const Icon(Icons.delete_sweep_outlined),
+                      onPressed: () =>
+                          _showClearAllDialog(context, context.read<BookMarkCubit>()),
+                    );
                   },
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.pw16,
-                      vertical: AppSizes.ph12,
-                    ),
-                    hintText: "Search",
-                    hintStyle: TextStyle(
-                      color: const Color(0xFFA0A0A0),
-                      fontSize: AppSizes.sp14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, size: 18),
-                            onPressed: () {
-                              _searchController.clear();
-                              controller.searchBookmarks('');
-                              setState(() {});
-                            },
-                          )
-                        : const Icon(Icons.search, color: Color(0xFFA0A0A0)),
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.r8),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.r8),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.r8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
                 ),
-              ),
+              ],
+            ),
+            body: BlocBuilder<BookMarkCubit, BookMarkState>(
+              builder: (context, state) {
+                if (state.status == RequestStytasEnum.loding && state.bookmarks.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              // Content Area
-              Expanded(
-                child: articles.isEmpty
-                    ? BookmarkEmptyState(
-                        isSearching: _searchController.text.trim().isNotEmpty,
-                      )
-                    : ListView.builder(
-                        itemCount: articles.length,
-                        padding: EdgeInsets.only(bottom: AppSizes.ph16),
-                        itemBuilder: (context, index) {
-                          final article = articles[index];
-                          return Dismissible(
-                            key: Key(article.url),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              alignment: Alignment.centerRight,
-                              padding: EdgeInsets.only(right: AppSizes.pw20),
-                              color: LightColor.primaryColor,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.delete_outline, color: Colors.white),
-                                  SizedBox(width: 6),
-                                  Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onDismissed: (direction) async {
-                              await controller.removeBookmark(article.url);
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(Constants.bookmarkRemovedMessage),
-                                    duration: const Duration(seconds: 3),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        controller.addBookmark(article);
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: NewsItem(model: article),
-                          );
-                        },
+                final cubit = context.read<BookMarkCubit>();
+                final articles = state.bookmarkedArticles;
+
+                return Column(
+                  children: [
+                    // Search bar matching Figma search input
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.pw16,
+                        vertical: AppSizes.ph8,
                       ),
-              ),
-            ],
+                      child: TextField(
+                        controller: _searchController,
+                        maxLines: 1,
+                        textAlignVertical: TextAlignVertical.center,
+                        onChanged: (value) {
+                          cubit.searchBookmarks(value);
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.pw16,
+                            vertical: AppSizes.ph12,
+                          ),
+                          hintText: "Search",
+                          hintStyle: TextStyle(
+                            color: const Color(0xFFA0A0A0),
+                            fontSize: AppSizes.sp14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear, size: 18),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    cubit.searchBookmarks('');
+                                    setState(() {});
+                                  },
+                                )
+                              : const Icon(Icons.search, color: Color(0xFFA0A0A0)),
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSizes.r8),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSizes.r8),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSizes.r8),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Content Area
+                    Expanded(
+                      child: articles.isEmpty
+                          ? BookmarkEmptyState(
+                              isSearching: _searchController.text.trim().isNotEmpty,
+                            )
+                          : ListView.builder(
+                              itemCount: articles.length,
+                              padding: EdgeInsets.only(bottom: AppSizes.ph16),
+                              itemBuilder: (context, index) {
+                                final article = articles[index];
+                                return Dismissible(
+                                  key: Key(article.url),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: EdgeInsets.only(right: AppSizes.pw20),
+                                    color: LightColor.primaryColor,
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.delete_outline, color: Colors.white),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  onDismissed: (direction) async {
+                                    await cubit.removeBookmark(article.url);
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            Constants.bookmarkRemovedMessage,
+                                          ),
+                                          duration: const Duration(seconds: 3),
+                                          action: SnackBarAction(
+                                            label: 'Undo',
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              cubit.addBookmark(article);
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: NewsItem(model: article),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
           );
         },
       ),

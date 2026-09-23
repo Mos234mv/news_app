@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/core/Theme/light_theme.dart';
 import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/data_source/local_data/user_repository.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/features/bookmark/cubit/book_mark_cubit.dart';
 import 'package:news_app/features/bookmark/repository/bookmark_repository.dart';
 import 'package:news_app/features/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => BookmarkController())],
+      providers: [BlocProvider(create: (_) => BookMarkCubit())],
       child: const MyApp(),
     ),
   );

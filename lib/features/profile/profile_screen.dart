@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/core/constant/constants.dart';
@@ -10,17 +11,16 @@ import 'package:news_app/core/data_source/local_data/prefrence_manager.dart';
 import 'package:news_app/core/widgets/custom_svg.dart';
 import 'package:news_app/features/auth/login_screen.dart';
 import 'package:news_app/features/profile/bottom%20sheet/profile_info_bottomsheet.dart';
-import 'package:news_app/features/profile/profile_controller.dart';
+import 'package:news_app/features/profile/cubit/profile_cubit.dart';
 import 'package:news_app/features/profile/terms_and_conditions_screen.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProfileController>(
-      create: (context) => ProfileController(),
+    return BlocProvider(
+      create: (context) => ProfileCubit(),
       child: Scaffold(
         appBar: AppBar(title: Text('Profile'), centerTitle: true),
         body: Padding(
@@ -28,8 +28,8 @@ class ProfileScreen extends StatelessWidget {
             vertical: AppSizes.ph24,
             horizontal: AppSizes.ph16,
           ),
-          child: Consumer<ProfileController>(
-            builder: (BuildContext context, controller, Widget? child) {
+          child: BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (BuildContext context, state) {
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         children: [
                           CircleAvatar(
-                            backgroundImage: controller.selectedImage == null
+                            backgroundImage: state.selectedImage == null
                                 ? AssetImage('assets/images/profileImage.png')
-                                : FileImage(File(controller.selectedImage!.path)),
+                                : FileImage(File(state.selectedImage!.path)),
                             radius: AppSizes.r60,
                             backgroundColor: Colors.transparent,
                           ),
@@ -65,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(height: AppSizes.ph8),
                     Center(
                       child: Text(
-                        controller.userName ?? "",
+                        state.userName ?? "",
                         style: TextStyle(color: Colors.black, fontSize: AppSizes.sp16),
                       ),
                     ),
@@ -81,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                             return ProfileInfoBottomsheet();
                           },
                         ).then((value) {
-                          controller.getUserData();
+                          context.read<ProfileCubit>().getUserData();
                         });
                       },
                     ),
@@ -91,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
                       () {},
                     ),
                     _buildProfileItem(
-                      controller.countryName ?? "Country",
+                      state.countryName ?? "Country",
                       "assets/images/countryicon.svg",
                       () {
                         showCountryPicker(
@@ -119,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           context: context,
                           onSelect: (Country country) {
-                            controller.saveCountry(country);
+                            context.read<ProfileCubit>().saveCountry(country);
                           },
                         );
                       },
@@ -164,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 void showImageSourceDialog(BuildContext context) {
-  final controller = context.read<ProfileController>();
+  final controller = context.read<ProfileCubit>();
   showDialog(
     context: context,
     builder: (BuildContext context) {

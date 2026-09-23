@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/features/Home/home_screen.dart';
 import 'package:news_app/features/bookmark/bookmark_screen.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
+import 'package:news_app/features/bookmark/cubit/book_mark_cubit.dart';
 import 'package:news_app/features/profile/profile_screen.dart';
 import 'package:news_app/features/search/search_screen.dart';
-import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -27,9 +27,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Consumer<BookmarkController>(
-        builder: (context, bookmarkController, child) {
-          final int count = bookmarkController.bookmarkCount;
+      bottomNavigationBar: BlocBuilder<BookMarkCubit, BookMarkState>(
+        builder: (context, state) {
+          final int count = state.bookmarkCount;
           return BottomNavigationBar(
             currentIndex: _currentIndex,
             onTap: (int index) {

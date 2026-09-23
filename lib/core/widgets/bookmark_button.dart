@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
-import 'package:news_app/features/bookmark/controllers/bookmark_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:news_app/features/bookmark/cubit/book_mark_cubit.dart';
 
 class BookmarkButton extends StatelessWidget {
   const BookmarkButton({
@@ -27,13 +27,14 @@ class BookmarkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BookmarkController>(
-      builder: (context, controller, child) {
-        final bool isBookmarked = controller.isBookmarked(article.url);
+    return BlocBuilder<BookMarkCubit, BookMarkState>(
+      builder: (context, state) {
+        final cubit = context.read<BookMarkCubit>();
+        final bool isBookmarked = state.isBookmarked(article.url);
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () async {
-            final bool isAdded = await controller.toggleBookmark(article);
+            final bool isAdded = await cubit.toggleBookmark(article);
             if (onToggle != null) {
               onToggle!(isAdded);
             }
@@ -41,7 +42,7 @@ class BookmarkButton extends StatelessWidget {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(controller.getSuccessMessage(isAdded)),
+                  content: Text(cubit.getSuccessMessage(isAdded)),
                   duration: const Duration(seconds: 1),
                 ),
               );

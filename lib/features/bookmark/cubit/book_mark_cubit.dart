@@ -1,95 +1,90 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/constant/constants.dart';
 import 'package:news_app/core/enums/request_stytas_enum.dart';
-import 'package:news_app/core/mixin/safe_notifier_mixin.dart';
 import 'package:news_app/features/Home/models/news_article_model.dart';
 import 'package:news_app/features/bookmark/models/bookmark_model.dart';
 import 'package:news_app/features/bookmark/repository/bookmark_repository.dart';
 
-class BookmarkController extends ChangeNotifier with SafeNotify {
-  final BookmarkRepository _repository;
+part 'book_mark_state.dart';
 
-  RequestStytasEnum status = RequestStytasEnum.loding;
-  RequestStytasEnum get bookmarkStatus => status;
-  String? errorMessage;
+class BookMarkCubit extends Cubit<BookMarkState> {
+  final BookmarkRepository _repository;
+  final TextEditingController searchController = TextEditingController();
+
+  BookMarkCubit({BookmarkRepository? repository})
+    : _repository = repository ?? BookmarkRepository(),
+      super(const BookMarkState()) {
+    loadBookmarks();
+  }
 
   String getSuccessMessage(bool isAdded) =>
       isAdded ? Constants.bookmarkAddedMessage : Constants.bookmarkRemovedMessage;
 
-  List<BookmarkModel> _bookmarks = [];
-  Set<String> _bookmarkedUrls = {};
-  TextEditingController searchController = TextEditingController();
-
-  BookmarkController({BookmarkRepository? repository})
-      : _repository = repository ?? BookmarkRepository() {
-    loadBookmarks();
-  }
-
   /// List of saved BookmarkModel items
-  List<BookmarkModel> get bookmarks => _bookmarks;
+  List<BookmarkModel> get bookmarks => state.bookmarks;
 
   /// List of saved bookmarks converted to NewsArticleModel for UI rendering
   List<NewsArticleModel> get bookmarkedArticles =>
-      _bookmarks.map((b) => bookmarkToArticle(b)).toList();
+      state.bookmarks.map((b) => bookmarkToArticle(b)).toList();
 
   /// Set of bookmarked URLs for fast O(1) checks
-  Set<String> get bookmarkedUrls => _bookmarkedUrls;
+  Set<String> get bookmarkedUrls => state.bookmarkedUrls;
 
   /// Total count of bookmarks
-  int get bookmarkCount => _bookmarks.length;
+  int get bookmarkCount => state.bookmarks.length;
 
-  int getBookmarkCount() => _bookmarks.length;
+  int getBookmarkCount() => state.bookmarks.length;
 
   /// Check if an article URL is currently bookmarked
   bool isBookmarked(String? url) {
     if (url == null || url.isEmpty) return false;
-    return _bookmarkedUrls.contains(url);
+    return state.bookmarkedUrls.contains(url);
   }
 
   /// Load all bookmarks from local Hive storage
   void loadBookmarks() {
     try {
-      status = RequestStytasEnum.loding;
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.loding));
 
-      _bookmarks = _repository.getBookmarks();
-      _bookmarkedUrls = _bookmarks.map((b) => b.url).toSet();
-      status = RequestStytasEnum.loded;
-      errorMessage = null;
+      final bookmarks = _repository.getBookmarks();
+      final bookmarkedUrls = bookmarks.map((b) => b.url).toSet();
+
+      emit(
+        BookMarkState(
+          status: RequestStytasEnum.loded,
+          bookmarks: bookmarks,
+          bookmarkedUrls: bookmarkedUrls,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
     }
-    safeNotify();
   }
 
   /// Add a bookmark from NewsArticleModel
   Future<void> addBookmark(NewsArticleModel article) async {
     try {
-      status = RequestStytasEnum.loding;
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.loding));
 
       await _repository.addBookmark(article);
       loadBookmarks();
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
     }
   }
 
   /// Remove a bookmark by article URL
   Future<void> removeBookmark(String url) async {
     try {
-      status = RequestStytasEnum.loding;
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.loding));
 
       await _repository.removeBookmark(url);
       loadBookmarks();
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
     }
   }
 
@@ -101,9 +96,7 @@ class BookmarkController extends ChangeNotifier with SafeNotify {
       loadBookmarks();
       return isAdded;
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
       return false;
     }
   }
@@ -111,36 +104,38 @@ class BookmarkController extends ChangeNotifier with SafeNotify {
   /// Search bookmarks by query (filters by title, description, or author)
   void searchBookmarks(String query) {
     try {
-      status = RequestStytasEnum.loding;
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.loding));
 
+      final List<BookmarkModel> bookmarks;
       if (query.trim().isEmpty) {
-        _bookmarks = _repository.getBookmarks();
+        bookmarks = _repository.getBookmarks();
       } else {
-        _bookmarks = _repository.searchBookmarks(query);
+        bookmarks = _repository.searchBookmarks(query);
       }
-      _bookmarkedUrls = _bookmarks.map((b) => b.url).toSet();
-      status = RequestStytasEnum.loded;
-      errorMessage = null;
+      final bookmarkedUrls = bookmarks.map((b) => b.url).toSet();
+
+      emit(
+        BookMarkState(
+          status: RequestStytasEnum.loded,
+          bookmarks: bookmarks,
+          bookmarkedUrls: bookmarkedUrls,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
     }
-    safeNotify();
   }
 
   /// Clear all bookmarks from Hive storage
   Future<void> clearAllBookmarks() async {
     try {
-      status = RequestStytasEnum.loding;
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.loding));
 
       await _repository.clearAllBookmarks();
       loadBookmarks();
     } catch (e) {
-      status = RequestStytasEnum.error;
-      errorMessage = e.toString();
-      safeNotify();
+      emit(state.copyWith(status: RequestStytasEnum.error, errorMessage: e.toString()));
     }
   }
 
@@ -160,8 +155,8 @@ class BookmarkController extends ChangeNotifier with SafeNotify {
   }
 
   @override
-  void dispose() {
+  Future<void> close() {
     searchController.dispose();
-    super.dispose();
+    return super.close();
   }
 }
