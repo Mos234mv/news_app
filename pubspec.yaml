@@ -47,6 +47,8 @@ dependencies:
   country_picker: ^2.0.28
   hive_ce: ^2.20.0
   hive_ce_flutter: ^2.3.4 
+  flutter_bloc: ^9.1.1
+  equatable: ^3.0.0
 
 
 dev_dependencies:

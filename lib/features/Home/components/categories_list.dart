@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/Theme/light_color.dart';
 import 'package:news_app/core/constant/app_sizes.dart';
 import 'package:news_app/features/Home/categories_Screen.dart';
 import 'package:news_app/features/Home/components/view_all%20_comoponent.dart';
-import 'package:news_app/features/Home/models/home_provider.dart';
+import 'package:news_app/features/Home/cubit/cubit/home_cubit.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesList extends StatelessWidget {
   CategoriesList({super.key});
-  final List<String> categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology'];
+  final List<String> categories = [
+    'business',
+    'entertainment',
+    'general',
+    'health',
+    'science',
+    'sports',
+    'technology',
+  ];
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (BuildContext context, HomeProvider controller, Widget? child) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (BuildContext context, state) {
         return SliverToBoxAdapter(
           child: Column(
             children: [
@@ -24,7 +33,10 @@ class CategoriesList extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return ChangeNotifierProvider.value(value: controller, child: CategoriesScreen());
+                        return BlocProvider.value(
+                          value: context.read(),
+                          child: CategoriesScreen(),
+                        );
                       },
                     ),
                   );
@@ -32,7 +44,11 @@ class CategoriesList extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsets.only(left: AppSizes.pw16, top: AppSizes.ph16, bottom: AppSizes.ph16),
+                padding: EdgeInsets.only(
+                  left: AppSizes.pw16,
+                  top: AppSizes.ph16,
+                  bottom: AppSizes.ph16,
+                ),
                 child: SizedBox(
                   height: AppSizes.h35,
                   child: ListView.separated(
@@ -40,32 +56,43 @@ class CategoriesList extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     itemBuilder: (BuildContext context, int index) {
-                      bool isSelected = categories[index] == controller.selectedCategory;
+                      bool isSelected = categories[index] == state.selectedCategory;
                       return GestureDetector(
                         onTap: () {
-                          controller.updatSelectedCategory(categories[index]);
+                          context.read<HomeCubit>().updatSelectedCategory(
+                            categories[index],
+                          );
                         },
                         child: IntrinsicWidth(
                           child: Column(
                             children: [
                               Text(
-                                categories[index][0].toUpperCase() + categories[index].substring(1),
+                                categories[index][0].toUpperCase() +
+                                    categories[index].substring(1),
                                 style: TextStyle(
-                                  color: isSelected ? LightColor.primaryColor : Color(0xFF363636),
+                                  color: isSelected
+                                      ? LightColor.primaryColor
+                                      : Color(0xFF363636),
                                   fontSize: AppSizes.sp16,
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w400,
                                 ),
                               ),
                               if (isSelected) ...[
                                 SizedBox(height: AppSizes.ph6),
-                                Container(height: AppSizes.h2, color: LightColor.primaryColor),
+                                Container(
+                                  height: AppSizes.h2,
+                                  color: LightColor.primaryColor,
+                                ),
                               ],
                             ],
                           ),
                         ),
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) => SizedBox(width: AppSizes.pw12),
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(width: AppSizes.pw12),
                   ),
                 ),
               ),
